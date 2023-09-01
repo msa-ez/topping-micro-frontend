@@ -8,6 +8,7 @@
     "build": "webpack --mode=production"
   },
   "dependencies": {
+    "single-spa": "^5.3.4"
   },
   "devDependencies": {
     "babel-eslint": "^10.1.0",
@@ -26,7 +27,6 @@
       "node": true
     },
     "extends": [
-      "plugin:vue/essential",
       "eslint:recommended"
     ],
     "parserOptions": {

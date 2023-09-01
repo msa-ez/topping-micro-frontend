@@ -1,11 +1,11 @@
 import { registerApplication, start } from "single-spa";
 
-{{#boundedContext}}
+{{#boundedContexts}}
 registerApplication({
   name: "{{nameCamelCase}}",
   app: () => System.import("{{nameCamelCase}}"),
   activeWhen: "/{{namePlural}}",
 });
-{{#boundedContext}}
+{{#boundedContexts}}
 
 start();
