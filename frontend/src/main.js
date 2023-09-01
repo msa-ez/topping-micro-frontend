@@ -50,15 +50,13 @@ templateFiles.keys().forEach(function(tempFiles) {
 Vue.use(Managing);
 const pluralCaseList = []
 
-{{#boundedContexts}}
-    {{#aggregates}}
+{{#aggregates}}
 pluralCaseList.push( {plural: "{{boundedContext.namePlural}}/{{namePlural}}", pascal: "{{boundedContext.namePascalCase}}{{namePascalCase}}"} )
-    {{/aggregates}}
+{{/aggregates}}
 
-    {{#viewes}}
+{{#viewes}}
 pluralCaseList.push( {plural: "{{namePlural}}", pascal: "{{namePascalCase}}"} )
-    {{/viewes}}
-{{/boundedContexts}}
+{{/viewes}}
 
 Vue.prototype.$ManagerLists.forEach(function(item, idx) {
   pluralCaseList.forEach(function(tmp) {

@@ -1,7 +1,5 @@
 fileName: SNSApp.vue
 ---
-
-
 <template>
     <v-app id="inspire">
         <div>
@@ -48,7 +46,6 @@ fileName: SNSApp.vue
 
             <v-navigation-drawer app clipped flat v-model="sideBar">
                 <v-list>
-		    {{#boundedContexts}}
     		    {{#aggregates}}
                     <v-list-item
                         class="px-2"
@@ -75,7 +72,6 @@ fileName: SNSApp.vue
                         {{namePascalCase}}
                     </v-list-item>
     		    {{/viewes}}
-		    {{/boundedContexts}}
                 </v-list>
             </v-navigation-drawer>
         </div>
@@ -154,7 +150,6 @@ export default {
         flipped: [],
         ImageUrl: '{{#if options.rootModel.uiStyle.logoImage}}{{{options.rootModel.uiStyle.logoImage.url}}}{{/if}}',
         aggregate: [
-            {{#boundedContexts}}
             {{#aggregates}}
             { 
                 title: '{{#ifNotNull displayName namePascalCase}}{{/ifNotNull}}', 
@@ -164,8 +159,6 @@ export default {
                 ImageUrl: '{{#if options.rootModel.uiStyle.logoImage}}{{{options.rootModel.uiStyle.logoImage.url}}}{{/if}}',
             },
             {{/aggregates}}
-            {{/boundedContexts}}
-            
         ],
         {{#if (isSelectedSecurity options.rootModel.toppingPlatforms)}}
         username: '',
