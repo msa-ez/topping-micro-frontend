@@ -1,14 +1,14 @@
 fileName: root-config.js
 path: frontend/src
 ---
-import single-spa from "single-spa";
+import singleSpa from "single-spa";
 
 {{#boundedContexts}}
-single-spa.registerApplication({
+singleSpa.registerApplication({
   name: "{{nameCamelCase}}",
   app: () => System.import("{{nameCamelCase}}"),
   activeWhen: "/{{namePlural}}",
 });
 {{#boundedContexts}}
 
-single-spa.start();
+singleSpa.start();
