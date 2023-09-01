@@ -1,5 +1,7 @@
  /*eslint-disable*/
+import "./set-public-path";
 import Vue from "vue";
+import singleSpaVue from "single-spa-vue";
 import App from "./App.vue";
 import vuetify from "./plugins/vuetify";
 import Managing from "./components";
@@ -70,6 +72,7 @@ Vue.prototype.$ManagerLists.forEach(function(item, idx) {
   })
 })
 
+
 {{#if (isSelectedSecurity options.rootModel.toppingPlatforms)}}
 let initOptions = {
   url: `http://localhost:9090/`,
@@ -95,17 +98,20 @@ function init() {
     }
 
     Vue.prototype.$OAuth = keycloak
-  
-    new Vue({
-      vuetify,
-      router,
-      render: h => h(App, {
-        props: {
-          OAuth: keycloak,
-        },
-      }),
-    }).$mount("#app");
-  
+
+    const vueLifecycles = singleSpaVue({
+      Vue,
+      appOptions: {
+        vuetify,
+        router,
+        render: h => h(App, {
+          props: {
+            OAuth: keycloak,
+          },
+        }),
+      }
+    });
+    
     window.setTimeout(refreshToken.bind(null, keycloak), ONE_MINUTE);
   }).catch(() => {
     console.error(`Auth Fail`);
@@ -135,12 +141,19 @@ function errorRefresh() {
   console.error('Failed to refresh token');
 }
 {{else}}
-new Vue({
-  vuetify,
-  router,
-  render: h => h(App)
-}).$mount("#app");
+const vueLifecycles = singleSpaVue({
+  Vue,
+  appOptions: {
+    vuetify,
+    render: h => h(App),
+    router
+  }
+});
 {{/if}}
+
+export const bootstrap = vueLifecycles.bootstrap;
+export const mount = vueLifecycles.mount;
+export const unmount = vueLifecycles.unmount;
 
 <function>
  window.$HandleBars.registerHelper('isSelectedSecurity', function (selectedSecurity) {
