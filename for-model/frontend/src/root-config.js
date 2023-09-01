@@ -1,3 +1,5 @@
+path: frontend/src
+---
 import { registerApplication, start } from "single-spa";
 
 {{#boundedContexts}}

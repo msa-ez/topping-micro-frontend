@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "webpack-dev-server --mode=development --port 8080 --env.isLocal=true",
+    "start": "webpack-dev-server --mode=development --port 8080",
     "lint": "eslint src",
     "build": "webpack --mode=production"
   },
@@ -26,7 +26,6 @@
       "node": true
     },
     "extends": [
-      "plugin:vue/essential",
       "eslint:recommended"
     ],
     "parserOptions": {
