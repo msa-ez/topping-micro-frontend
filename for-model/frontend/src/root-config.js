@@ -1,13 +1,13 @@
 path: frontend/src
 ---
-import singleSpa from "single-spa";
+import { registerApplication, start } from "single-spa";
 
 {{#boundedContexts}}
-singleSpa.registerApplication({
+registerApplication({
   name: "{{nameCamelCase}}",
   app: () => System.import("{{nameCamelCase}}"),
   activeWhen: "/{{namePlural}}",
 });
-{{#boundedContexts}}
+{{/boundedContexts}}
 
-singleSpa.start();
+start();
