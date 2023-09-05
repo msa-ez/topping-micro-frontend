@@ -12,5 +12,6 @@ module.exports = defineConfig({
   },
   devServer: {
     disableHostCheck: true
-  }
+  },
+  externals: ["vue", "vue-router", /^@my-app\/.+/]
 })
