@@ -1,5 +1,5 @@
 fileName: File.vue
-path: {{boundedContext.nameCamelCase}}/frontend/src/components/vo
+path: {{nameCamelCase}}/frontend/src/components/vo
 ---
 <template>
     <div style="margin: 0 -15px 0 -15px;">

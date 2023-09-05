@@ -1,5 +1,5 @@
 fileName: Date.vue
-path: {{boundedContext.nameCamelCase}}/frontend/src/components/primitives
+path: {{nameCamelCase}}/frontend/src/components/primitives
 ---
 <template>
     <div>

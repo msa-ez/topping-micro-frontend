@@ -1,5 +1,5 @@
 fileName: Comment.vue
-path: {{boundedContext.nameCamelCase}}/frontend/src/components/vo
+path: {{nameCamelCase}}/frontend/src/components/vo
 ---
 <template>
     <div style="margin: 15px 0 0 -15px;">
