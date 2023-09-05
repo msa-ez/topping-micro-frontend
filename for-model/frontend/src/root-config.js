@@ -4,8 +4,8 @@ import { registerApplication, start } from "single-spa";
 
 {{#boundedContexts}}
 registerApplication({
-  name: "{{nameCamelCase}}",
-  app: () => System.import("{{nameCamelCase}}"),
+  name: "@my-app/{{name}}",
+  app: () => System.import("@my-app/{{name}}"),
   activeWhen: "/{{namePlural}}",
 });
 {{/boundedContexts}}

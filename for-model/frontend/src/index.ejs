@@ -1,3 +1,5 @@
+path: frontend/src
+---
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -11,7 +13,7 @@
     <script type="systemjs-importmap">
       {
         "imports": {
-          "root-config": "/root-config.js"
+          "@my-app/root-config": "/root-config.js"
         }
       }
     </script>
@@ -21,7 +23,7 @@
   </head>
 <body>
   <script>
-    System.import('root-config');
+    System.import('@my-app/root-config');
   </script>
   <import-map-overrides-full show-when-local-storage="devtools" dev-libs></import-map-overrides-full>
 </body>
