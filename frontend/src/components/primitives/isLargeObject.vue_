@@ -1,5 +1,5 @@
 fileName: LargeObject.vue
-path: frontend/src/components/primitives
+path: {{boundedContext.nameCamelCase}}/frontend/src/components/primitives
 ---
 <template>
     <div>

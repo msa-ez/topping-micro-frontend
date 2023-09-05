@@ -1,6 +1,6 @@
 forEach: Command
 fileName: {{namePascalCase}}Command.vue
-path: frontend/src/components
+path: {{boundedContext.nameCamelCase}}/frontend/src/components
 ---
 <template>
     <v-card outlined>

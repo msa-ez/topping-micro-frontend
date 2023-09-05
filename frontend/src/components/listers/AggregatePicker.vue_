@@ -1,6 +1,6 @@
 forEach: Aggregate
 fileName: {{boundedContext.namePascalCase}}{{namePascalCase}}Picker.vue
-path: frontend/src/components/listers
+path: {{boundedContext.nameCamelCase}}/frontend/src/components/listers
 ---
 <template>
     <div>

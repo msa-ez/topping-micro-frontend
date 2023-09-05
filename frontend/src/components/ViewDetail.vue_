@@ -1,6 +1,6 @@
 forEach: View
 fileName: {{namePascalCase}}ViewDetail.vue
-path: frontend/src/components
+path: {{boundedContext.nameCamelCase}}/frontend/src/components
 ---
 <template>
 

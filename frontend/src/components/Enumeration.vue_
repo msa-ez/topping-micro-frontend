@@ -1,6 +1,6 @@
 forEach: Enumeration
 fileName: {{pascalCase name}}.vue
-path: frontend/src/components
+path: {{boundedContext.nameCamelCase}}/frontend/src/components
 ---
 <template>
     <div style="margin: 0 -15px 0 -15px;">

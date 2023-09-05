@@ -1,6 +1,6 @@
 forEach: Aggregate
 fileName: {{boundedContext.namePascalCase}}{{namePascalCase}}.vue
-path: frontend/src/components
+path: {{boundedContext.nameCamelCase}}/frontend/src/components
 ---
 <template>
     <v-card style="width:450px; height:100%;" outlined>
