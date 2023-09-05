@@ -33,6 +33,9 @@ module.exports = (env) => ({
     new HtmlWebpackPlugin({
       inject: false,
       template: "src/index.ejs",
+      templateParameters: {
+        isLocal: env && env.isLocal === "true",
+      },
     }),
     new CleanWebpackPlugin(),
   ],

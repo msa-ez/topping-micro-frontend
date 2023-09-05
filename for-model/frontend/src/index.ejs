@@ -10,13 +10,18 @@ path: frontend/src
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@latest/css/materialdesignicons.min.css">
     <meta name="importmap-type" content="systemjs-importmap" />
+    <% if (isLocal) { %>
     <script type="systemjs-importmap">
       {
         "imports": {
+          {{#boundedContexts}}
+          "@my-app/{{name}}": "//localhost:{{portGenerated}}/js/app.js",
+          {{/boundedContexts}}
           "@my-app/root-config": "/root-config.js"
         }
       }
     </script>
+    <% } %>
     <script src="https://cdn.jsdelivr.net/npm/import-map-overrides/dist/import-map-overrides.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/systemjs/dist/system.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/systemjs/dist/extras/amd.js"></script>
