@@ -5,7 +5,7 @@ const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = (env) => ({
-  entry: path.resolve(__dirname, "src/root-config"),
+  entry: path.resolve(__dirname, "src/public/root-config"),
   output: {
     filename: "root-config.js",
     libraryTarget: "system",
