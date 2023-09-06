@@ -6,7 +6,6 @@ spring:
   profiles: default
   cloud:
     gateway:
-//<<< API Gateway / Routes
       routes:
         {{#boundedContexts}}
         - id: {{name}}
@@ -18,7 +17,6 @@ spring:
           uri: http://localhost:8080
           predicates:
             - Path=/**
-//>>> API Gateway / Routes
       globalcors:
         corsConfigurations:
           '[/**]':

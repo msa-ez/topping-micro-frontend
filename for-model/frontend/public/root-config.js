@@ -1,4 +1,4 @@
-path: frontend/src
+path: frontend/src/public
 ---
 import { registerApplication, start } from "single-spa";
 
