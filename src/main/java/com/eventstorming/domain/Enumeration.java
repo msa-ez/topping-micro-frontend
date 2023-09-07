@@ -15,29 +15,33 @@ import java.util.Date;
 public enum {{pascalCase name}} {
 
     {{#items}}
-    {{#setItems value ../items}}{{/setItems}}
+    {{#setItems value ../items ../useKeyValue}}{{/setItems}}
     {{/items}}
-
 }
 
 <function>
 
-window.$HandleBars.registerHelper('setItems', function (value, items) {
+window.$HandleBars.registerHelper('setItems', function (value, items, hasKey) {
     try {
-        var text = ''
+        var text = '';
         for(var i = 0; i < items.length; i ++ ){
             if(items[i]) {
                 if(items[i].value == value) {
-                    text = value
-                    if(i+1 < items.length) {
-                        text += ','
+                    if (hasKey) {
+                        text = `${items[i].key}("${value}")`;
                     } else {
-                        text += ';'
+                        text = value
                     }
-                    return text
+                    if(i === items.length-1) {
+                        text += ';'
+                    } else {
+                        text += ','
+                    }
                 }
             }
         }
+        return text
+        
     } catch (e) {
         console.log(e)
     }

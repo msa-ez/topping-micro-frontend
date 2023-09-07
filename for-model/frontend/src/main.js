@@ -1,5 +1,7 @@
  /*eslint-disable*/
+import "./set-public-path";
 import Vue from "vue";
+import singleSpaVue from "single-spa-vue";
 import App from "./App.vue";
 import vuetify from "./plugins/vuetify";
 import Managing from "./components";
@@ -94,23 +96,37 @@ function init() {
     }
 
     Vue.prototype.$OAuth = keycloak
-  
-    new Vue({
-      vuetify,
-      render: h => h(App, {
-        props: {
-          OAuth: keycloak,
-        },
-      }),
-    }).$mount("#app");
+
+    const vueLifecycles = singleSpaVue({
+      Vue,
+      appOptions: {
+        vuetify,
+        render: h => h(App, {
+          props: {
+            OAuth: keycloak,
+          },
+        }),
+      }
+    });
+
+    export const bootstrap = vueLifecycles.bootstrap;
+    export const mount = vueLifecycles.mount;
+    export const unmount = vueLifecycles.unmount;
   
     window.setTimeout(refreshToken.bind(null, keycloak), ONE_MINUTE);
   }).catch(() => {
-    
-    new Vue({
-      vuetify,
-      render: h => h(App)
-    }).$mount("#app");
+
+    const vueLifecycles = singleSpaVue({
+      Vue,
+      appOptions: {
+        vuetify,
+        render: h => h(App)
+      }
+    });
+
+    export const bootstrap = vueLifecycles.bootstrap;
+    export const mount = vueLifecycles.mount;
+    export const unmount = vueLifecycles.unmount;
 
     console.error(`Auth Fail`);
   })
