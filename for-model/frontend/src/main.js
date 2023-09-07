@@ -4,6 +4,7 @@ import App from "./App.vue";
 import vuetify from "./plugins/vuetify";
 import Managing from "./components";
 import Keycloak from 'keycloak-js';
+
 Vue.config.productionTip = false;
 Vue.prototype.$Vue = Vue;
 

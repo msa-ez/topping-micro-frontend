@@ -1,11 +1,11 @@
-path: frontend
+path: frontend-root
 ---
 const path = require("path");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = (env) => ({
-  entry: path.resolve(__dirname, "src/public/root-config"),
+  entry: path.resolve(__dirname, "src/root-config"),
   output: {
     filename: "root-config.js",
     libraryTarget: "system",
@@ -32,7 +32,7 @@ module.exports = (env) => ({
   plugins: [
     new HtmlWebpackPlugin({
       inject: false,
-      template: "src/public/index.html",
+      template: "src/index.ejs",
       templateParameters: {
         isLocal: env && env.isLocal === "true",
       },

@@ -1,6 +1,12 @@
-path: frontend/src/public
+path: frontend-root/src
 ---
 import { registerApplication, start } from "single-spa";
+
+registerApplication({
+  name: "@my-app/home",
+  app: () => System.import("@my-app/home"),
+  activeWhen: "/",
+});
 
 {{#boundedContexts}}
 registerApplication({

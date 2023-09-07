@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve --env.isLocal=true",
+    "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
@@ -20,7 +20,6 @@
     "rsocket-core": "0.0.25",
     "rsocket-flowable": "0.0.25",
     "rsocket-websocket-client": "0.0.25",
-    "single-spa": "^5.3.4",
     "systemjs": "0.19.40",
     "systemjs-plugin-babel": "0.0.25",
     "systemjs-plugin-css": "0.1.37",
@@ -33,28 +32,21 @@
     "vue-apexcharts": "^1.6.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.9.0",
     "@vue/cli-plugin-babel": "~4.5.15",
     "@vue/cli-plugin-eslint": "~4.5.15",
     "@vue/cli-service": "~4.5.15",
     "babel-eslint": "^10.1.0",
     "babel-loader": "^9.1.2",
     "browser-sync": "2.27.7",
-    "clean-webpack-plugin": "^3.0.0",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^6.2.2",
-    "html-webpack-plugin": "^4.2.0",
     "lite-server": "2.4.0",
     "sass": "~1.32.0",
     "sass-loader": "^10.0.0",
-    "serve": "^11.3.0",
     "vue-cli-plugin-vuetify": "~2.4.7",
     "vue-loader": "^17.0.1",
     "vue-template-compiler": "^2.6.11",
-    "vuetify-loader": "^1.7.0",
-    "webpack": "^4.42.1",
-    "webpack-cli": "^3.3.11",
-    "webpack-dev-server": "^3.10.3"
+    "vuetify-loader": "^1.7.0"
   },
   "eslintConfig": {
     "root": true,
