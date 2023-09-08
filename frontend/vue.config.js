@@ -13,4 +13,5 @@ module.exports = {
       sockHost: "localhost",
       port: {{portGenerated}}
     },
+  }
 }

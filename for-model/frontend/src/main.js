@@ -6,7 +6,6 @@ import singleSpaVue from "single-spa-vue";
 import App from "./App.vue";
 
 import vuetify from "./plugins/vuetify";
-import '@babel/polyfill'
 
 import Managing from "./components";
 import router from './router';
