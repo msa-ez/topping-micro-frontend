@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import Vuetify from 'vuetify/lib/framework';
+import Vuetify from 'vuetify';
 import { readableColor } from 'polished';
 
 Vue.use(Vuetify);

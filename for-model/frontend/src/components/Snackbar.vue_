@@ -31,14 +31,6 @@ export default {
             color: 'info'
         },
     }),
-    created() {
-        this.$EventBus.$on('show-error', this.error);
-        this.$EventBus.$on('show-success', this.success);
-    },
-    destroyed() {
-        this.$EventBus.$off('show-error', this.error);
-        this.$EventBus.$off('show-success', this.success);
-    },
     methods:{
         error(e){
             this.snackbar.status = true

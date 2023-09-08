@@ -9,6 +9,7 @@
     "serve:standalone": "vue-cli-service serve --mode standalone --port {{portGenerated}}"
   },
   "dependencies": {
+    "@babel/polyfill": "^7.4.4",
     "@johmun/vue-tags-input": "^2.1.0",
     "axios": "^0.26.0",
     "core-js": "^3.6.5",

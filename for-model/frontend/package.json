@@ -5,7 +5,8 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "serve:standalone": "vue-cli-service serve --mode standalone --port 8080"
   },
   "dependencies": {
     "@grapecity/wijmo.styles": "^5.20222.877",
@@ -21,6 +22,7 @@
     "rsocket-flowable": "0.0.25",
     "rsocket-websocket-client": "0.0.25",
     "single-spa-vue": "^1.9.0",
+    "systemjs-webpack-interop": "^1.2.1",
     "systemjs": "0.19.40",
     "systemjs-plugin-babel": "0.0.25",
     "systemjs-plugin-css": "0.1.37",

@@ -2,13 +2,16 @@
 import "./set-public-path";
 import Vue from "vue";
 import singleSpaVue from "single-spa-vue";
+
 import App from "./App.vue";
+
 import vuetify from "./plugins/vuetify";
+
 import Managing from "./components";
-import router from './router';
 {{#if (isSelectedSecurity options.rootModel.toppingPlatforms)}}
 import Keycloak from 'keycloak-js';
 {{/if}}
+
 Vue.config.productionTip = false;
 require('./GlobalStyle.css');
 
@@ -101,10 +104,12 @@ function init() {
       Vue,
       appOptions: {
         vuetify,
-        router,
         render: h => h(App, {
           props: {
             OAuth: keycloak,
+            name: this.name,
+            mountParcel: this.mountParcel,
+            singleSpa: this.singleSpa,
           },
         }),
       }
@@ -143,8 +148,13 @@ const vueLifecycles = singleSpaVue({
   Vue,
   appOptions: {
     vuetify,
-    render: h => h(App),
-    router
+    render: h => h(App, {
+      props: {
+        name: this.name,
+        mountParcel: this.mountParcel,
+        singleSpa: this.singleSpa,
+      },
+    }),
   }
 });
 {{/if}}

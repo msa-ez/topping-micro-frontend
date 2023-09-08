@@ -2,16 +2,23 @@
 import "./set-public-path";
 import Vue from "vue";
 import singleSpaVue from "single-spa-vue";
+
 import App from "./App.vue";
+
 import vuetify from "./plugins/vuetify";
+import '@babel/polyfill'
+
 import Managing from "./components";
+import router from './router';
+
+{{#if (isSelectedSecurity options.rootModel.toppingPlatforms)}}
 import Keycloak from 'keycloak-js';
+{{/if}}
 
 Vue.config.productionTip = false;
-Vue.prototype.$Vue = Vue;
+require('./GlobalStyle.css');
 
 const axios = require("axios").default;
-require('./style.css');
 
 // backend host url
 axios.backend = null; //"http://localhost:8088";
@@ -49,15 +56,13 @@ templateFiles.keys().forEach(function(tempFiles) {
 Vue.use(Managing);
 const pluralCaseList = []
 
-{{#boundedContexts}}
-    {{#aggregates}}
-pluralCaseList.push( {plural: "{{namePlural}}", pascal: "{{namePascalCase}}"} )
-    {{/aggregates}}
+{{#aggregates}}
+pluralCaseList.push( {plural: "{{boundedContext.namePlural}}/{{namePlural}}", pascal: "{{boundedContext.namePascalCase}}{{namePascalCase}}"} )
+{{/aggregates}}
 
-    {{#views}}
+{{#viewes}}
 pluralCaseList.push( {plural: "{{namePlural}}", pascal: "{{namePascalCase}}"} )
-    {{/views}}
-{{/boundedContexts}}
+{{/viewes}}
 
 Vue.prototype.$ManagerLists.forEach(function(item, idx) {
   pluralCaseList.forEach(function(tmp) {
@@ -71,13 +76,14 @@ Vue.prototype.$ManagerLists.forEach(function(item, idx) {
   })
 })
 
+
+{{#if (isSelectedSecurity options.rootModel.toppingPlatforms)}}
 let initOptions = {
   url: `http://localhost:9090/`,
   realm: `master`,
-  clientId: `cliend-name`,
+  clientId: `master`,
   onLoad: `login-required`,
 };
-
 
 let keycloak = new Keycloak(initOptions);
 
@@ -101,33 +107,20 @@ function init() {
       Vue,
       appOptions: {
         vuetify,
+        router,
         render: h => h(App, {
           props: {
             OAuth: keycloak,
+            name: this.name,
+            mountParcel: this.mountParcel,
+            singleSpa: this.singleSpa,
           },
         }),
       }
     });
-
-    export const bootstrap = vueLifecycles.bootstrap;
-    export const mount = vueLifecycles.mount;
-    export const unmount = vueLifecycles.unmount;
-  
+    
     window.setTimeout(refreshToken.bind(null, keycloak), ONE_MINUTE);
   }).catch(() => {
-
-    const vueLifecycles = singleSpaVue({
-      Vue,
-      appOptions: {
-        vuetify,
-        render: h => h(App)
-      }
-    });
-
-    export const bootstrap = vueLifecycles.bootstrap;
-    export const mount = vueLifecycles.mount;
-    export const unmount = vueLifecycles.unmount;
-
     console.error(`Auth Fail`);
   })
 }
@@ -154,3 +147,40 @@ function warnRefresh() {
 function errorRefresh() {
   console.error('Failed to refresh token');
 }
+{{else}}
+const vueLifecycles = singleSpaVue({
+  Vue,
+  appOptions: {
+    vuetify,
+    render: h => h(App, {
+    props: {
+      name: this.name,
+      mountParcel: this.mountParcel,
+      singleSpa: this.singleSpa,
+    },
+  }),
+    router
+  }
+});
+{{/if}}
+
+export const bootstrap = vueLifecycles.bootstrap;
+export const mount = vueLifecycles.mount;
+export const unmount = vueLifecycles.unmount;
+
+<function>
+window.$HandleBars.registerHelper('isSelectedSecurity', function (selectedSecurity) {
+    try{
+        var isSelectedSecurity = false
+        for(var i=0; i<selectedSecurity.length; i++){
+            if(selectedSecurity[i] == 'keycloak-security'){
+                isSelectedSecurity =  true;
+            }
+        }
+
+        return isSelectedSecurity;
+    } catch(e){
+        console.log(e)
+    }
+});
+</function>

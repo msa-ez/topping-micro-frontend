@@ -1,85 +1,164 @@
 fileName: App.vue
 ---
 <template>
-    <v-app id="inspire">
-        <SNSApp />
-    </v-app>
+    <v-main>
+        <v-container style="padding:0px;" v-if="urlPath" fluid>
+            <router-view></router-view>
+        </v-container>
+        <v-container style="padding:0px;" v-else fluid>
+            <div style="width:100%; margin:0px 0px 20px 0px; position: relative;">
+                <v-img style="width:100%; height:300px;"
+                    src="{{#if options.rootModel.uiStyle.logoImage}}{{{options.rootModel.uiStyle.logoImage.url}}}{{/if}}"
+                ></v-img>
+                <div class="App-main-text-overlap">{{options.rootModel.uiStyle.serviceDescription.title}}</div>
+                <div class="App-sub-text-overlap">{{options.rootModel.uiStyle.serviceDescription.serviceDescription}}</div>
+            </div>
+            <v-row>
+                <v-col cols="4" class="d-flex justify-center" v-for="(aggregate, index) in aggregate" :key="index">
+                    <div 
+                        class="flip-card"
+                        @mouseover="flipCard(index)"
+                        @mouseleave="unflipCard(index)"
+                        :class="{ 'is-flipped': flipped[index] }"
+                    >
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front">
+                                <v-card
+                                    class="mx-auto"
+                                    style="width:300px; min-height: 310px; margin-bottom:20px; text-align: center; border-radius: 10px;"
+                                    outlined
+                                >
+                                    <v-list-item style="padding:15px; margin:0px;">
+                                        <v-img style="width:100%; height:120px; border-radius: 10px;" :src="aggregate.ImageUrl"></v-img>
+                                    </v-list-item>
+                                    <div style="text-align: left; padding:10px 15px 15px 15px; margin-top:-10px;">
+                                        <h2>\{{ aggregate.title }}</h2>
+                                        <div>\{{ aggregate.description }}</div>
+                                    </div>
+                                </v-card>
+                            </div>
+                            <div class="flip-card-back">
+                                <v-card
+                                    color="primary"
+                                    class="mx-auto"
+                                    style="width:300px; min-height: 310px; margin-bottom:20px; text-align: center; border-radius: 10px;"
+                                    outlined
+                                    :key="aggregate.key"
+                                    :to="aggregate.route"
+                                    @click="changeUrl()"
+                                >
+                                    <v-list-item style="padding:15px; margin:0px;">
+                                        <v-img style="width:100%; height:120px; border-radius: 10px;" :src="aggregate.ImageUrl"></v-img>
+                                    </v-list-item>
+                                    <h2 style="color:white;">\{{ aggregate.title }} 관리</h2>
+                                </v-card>
+                            </div>
+                        </div>
+                    </div>
+                </v-col>
+            </v-row>
+        </v-container>
+    </v-main>
 </template>
 
 <script>
-import SNSApp from './SNSApp.vue'
+    export default {
+        name: "App",
+        data: () => ({
+            useComponent: "",
+            drawer: true,
+            components: [],
+            sideBar: true,
+            urlPath: null,
+            flipped: [],
+            ImageUrl: '{{#if options.rootModel.uiStyle.logoImage}}{{{options.rootModel.uiStyle.logoImage.url}}}{{/if}}',
+            aggregate: [
+                {{#aggregates}}
+                { 
+                    title: '{{#ifNotNull displayName namePascalCase}}{{/ifNotNull}}', 
+                    description: '{{description}}', 
+                    key: '{{namePlural}}', 
+                    route: '/{{boundedContext.namePlural}}/{{namePlural}}',
+                    ImageUrl: '{{#if options.rootModel.uiStyle.logoImage}}{{{options.rootModel.uiStyle.logoImage.url}}}{{/if}}',
+                },
+                {{/aggregates}}
+            ],
+            {{#if (isSelectedSecurity options.rootModel.toppingPlatforms)}}
+            username: '',
+            {{else}}
+            {{/if}}
+        }),
+        
+        async created() {
+        var path = document.location.href.split("#/")
+        this.urlPath = path[1];
 
-export default {
-
-    components: {
-        SNSApp
-    },
-    name: "App",
-    data: () => ({
-        useComponent: "",
-        drawer: true,
-        components: [],
-        sideBar: true,
-        urlPath: null,
         {{#if (isSelectedSecurity options.rootModel.toppingPlatforms)}}
-        username: '',
+        var me = this
+        me.username = me.$OAuth.idTokenParsed.preferred_username
+
+        if(!me.username){
+            location.reload()
+        }
         {{else}}
         {{/if}}
-    }),
-    
-    async created() {
-      var path = document.location.href.split("#/")
-      this.urlPath = path[1];
-
-      {{#if (isSelectedSecurity options.rootModel.toppingPlatforms)}}
-      var me = this
-      me.username = me.$OAuth.idTokenParsed.preferred_username
-
-      if(!me.username){
-          location.reload()
-      }
-      {{else}}
-      {{/if}}
-    },
-
-    mounted() {
-        var me = this;
-        me.components = this.$ManagerLists;
-    },
-
-    methods: {
-        openSideBar(){
-            this.sideBar = !this.sideBar
         },
-        changeUrl() {
-            var path = document.location.href.split("#/")
-            this.urlPath = path[1];
+        watch: {
+            cards(newCards) {
+                this.flipped = new Array(newCards.length).fill(false);
+            },
         },
-        goHome() {
-            this.urlPath = null;
-        },
-        {{#if (isSelectedSecurity options.rootModel.toppingPlatforms)}}
-        logout(){
-            //const keycloak = new Keycloak();
 
-            //keycloak.logout;
-            if(confirm("로그아웃 하시겠습니까?")){
-                localStorage.clear()
-                location.href = 'http://localhost:9090/realms/master/protocol/openid-connect/logout'
-            }
+        mounted() {
+            var me = this;
+            me.components = this.$ManagerLists;
         },
-        {{else}}
-        {{/if}}
-    }
-};
+
+        methods: {
+            openSideBar(){
+                this.sideBar = !this.sideBar
+            },
+            changeUrl() {
+                var path = document.location.href.split("#/")
+                this.urlPath = path[1];
+                this.flipped.fill(false);
+            },
+            goHome() {
+                this.urlPath = null;
+            },
+            flipCard(index) {
+                this.$set(this.flipped, index, true);
+            },
+            unflipCard(index) {
+                this.$set(this.flipped, index, false);
+            },
+            {{#if (isSelectedSecurity options.rootModel.toppingPlatforms)}}
+            logout(){
+                //const keycloak = new Keycloak();
+
+                //keycloak.logout;
+                if(confirm("로그아웃 하시겠습니까?")){
+                    localStorage.clear()
+                    location.href = 'http://localhost:9090/realms/master/protocol/openid-connect/logout'
+                }
+            },
+            {{else}}
+            {{/if}}
+        }
+    };
 </script>
+
 <style>
-*{
-    font-family: {{options.rootModel.uiStyle.font.fontFamilyName}} !important;
-}
 </style>
 
 <function>
+window.$HandleBars.registerHelper('ifNotNull', function (displayName, name) {
+    if(displayName){
+        return displayName;
+    }else{
+        return name;
+    }
+})
 window.$HandleBars.registerHelper('isSelectedSecurity', function (toppingPlatforms) {
     var selectedSecurity = false;
     try{
