@@ -2,13 +2,9 @@
 import "./set-public-path";
 import Vue from "vue";
 import singleSpaVue from "single-spa-vue";
-
 import App from "./App.vue";
-
 import vuetify from "./plugins/vuetify";
-
 import Managing from "./components";
-import router from './router';
 
 {{#if (isSelectedSecurity options.rootModel.toppingPlatforms)}}
 import Keycloak from 'keycloak-js';
@@ -106,7 +102,6 @@ function init() {
       Vue,
       appOptions: {
         vuetify,
-        router,
         render: h => h(App, {
           props: {
             OAuth: keycloak,
