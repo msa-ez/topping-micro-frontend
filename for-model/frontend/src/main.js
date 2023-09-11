@@ -5,6 +5,7 @@ import singleSpaVue from "single-spa-vue";
 import App from "./App.vue";
 import vuetify from "./plugins/vuetify";
 import Managing from "./components";
+import router from "./router";
 
 {{#if (isSelectedSecurity options.rootModel.toppingPlatforms)}}
 import Keycloak from 'keycloak-js';
@@ -101,13 +102,11 @@ function init() {
     const vueLifecycles = singleSpaVue({
       Vue,
       appOptions: {
+        router,
         vuetify,
         render: h => h(App, {
           props: {
             OAuth: keycloak,
-            name: this.name,
-            mountParcel: this.mountParcel,
-            singleSpa: this.singleSpa,
           },
         }),
       }
@@ -145,15 +144,9 @@ function errorRefresh() {
 const vueLifecycles = singleSpaVue({
   Vue,
   appOptions: {
+    router,
     vuetify,
-    render: h => h(App, {
-    props: {
-      name: this.name,
-      mountParcel: this.mountParcel,
-      singleSpa: this.singleSpa,
-    },
-  }),
-    router
+    render: h => h(App),
   }
 });
 {{/if}}

@@ -1,19 +1,38 @@
 path: frontend-root/src
 ---
-import { registerApplication, start } from "single-spa";
+import { registerApplication, start } from 'single-spa';
+import {
+  constructApplications,
+  constructRoutes,
+  constructLayoutEngine,
+} from 'single-spa-layout';
 
-registerApplication({
-  name: "@my-app/home",
-  app: () => System.import("@my-app/home"),
-  activeWhen: "/",
-});
-
+const routes = constructRoutes(`
+<single-spa-router>
+<div style="display: flex;">
+  <div>
+    <application name="@my-app/home"></application>
+  </div>
+  <div>
 {{#boundedContexts}}
-registerApplication({
-  name: "@my-app/{{name}}",
-  app: () => System.import("@my-app/{{name}}"),
-  activeWhen: "/{{namePlural}}",
-});
+    <route path="{{namePlural}}">
+      <application name="@my-app/{{name}}"></application>
+    </route>
 {{/boundedContexts}}
+  </div>
+<div>
+</single-spa-router>
+`);
 
+const applications = constructApplications({
+  routes,
+  loadApp({ name }) {
+    return System.import(name);
+  },
+});
+
+const layoutEngine = constructLayoutEngine({ routes, applications });
+
+applications.forEach(registerApplication);
+layoutEngine.activate();
 start();

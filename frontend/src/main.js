@@ -2,9 +2,7 @@
 import "./set-public-path";
 import Vue from "vue";
 import singleSpaVue from "single-spa-vue";
-
 import App from "./App.vue";
-
 import vuetify from "./plugins/vuetify";
 
 import Managing from "./components";
@@ -22,7 +20,6 @@ axios.backend = null; //"http://localhost:8088";
 
 // axios.backendUrl = new URL(axios.backend);
 axios.fixUrl = function(original){
-
   if(!axios.backend && original.indexOf("/")==0) return original;
 
   var url = null;
@@ -103,13 +100,10 @@ function init() {
     const vueLifecycles = singleSpaVue({
       Vue,
       appOptions: {
-        vuetify,
+        vuetify: vuetify,
         render: h => h(App, {
           props: {
             OAuth: keycloak,
-            name: this.name,
-            mountParcel: this.mountParcel,
-            singleSpa: this.singleSpa,
           },
         }),
       }
@@ -147,14 +141,8 @@ function errorRefresh() {
 const vueLifecycles = singleSpaVue({
   Vue,
   appOptions: {
-    vuetify,
-    render: h => h(App, {
-      props: {
-        name: this.name,
-        mountParcel: this.mountParcel,
-        singleSpa: this.singleSpa,
-      },
-    }),
+    vuetify: vuetify,
+    render: h => h(App),
   }
 });
 {{/if}}
