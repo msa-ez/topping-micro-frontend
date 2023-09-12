@@ -79,7 +79,7 @@ fileName: App.vue
         </div>
 
         <v-main>
-            <v-container style="padding:0px;" v-if="urlPath" fluid>
+            <v-container style="padding:0px;" fluid>
                 <router-view></router-view>
             </v-container>
             <v-container style="padding:0px;" v-else fluid>
@@ -165,6 +165,19 @@ export default {
             {
                 text: "{{#ifNotNull displayName namePascalCase}}{{/ifNotNull}}",
                 link: "/{{namePlural}}",
+            },
+            {{/aggregates}}
+            {{/boundedContexts}}
+        ],
+        aggregate: [
+            {{#boundedContexts}}
+            {{#aggregates}}
+            { 
+                title: '{{#ifNotNull displayName namePascalCase}}{{/ifNotNull}}', 
+                description: '{{description}}', 
+                key: '{{namePlural}}', 
+                route: '/{{boundedContext.namePlural}}/{{namePlural}}',
+                ImageUrl: '{{#if options.rootModel.uiStyle.logoImage}}{{{options.rootModel.uiStyle.logoImage.url}}}{{/if}}',
             },
             {{/aggregates}}
             {{/boundedContexts}}
