@@ -1,7 +1,7 @@
 fileName: App.vue
 ---
 <template>
-    <v-app id="inspire">
+    <v-app>
         <div>
             <v-app-bar color="primary" app clipped-left flat>
                 <v-toolbar-title>
