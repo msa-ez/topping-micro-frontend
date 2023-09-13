@@ -1,8 +1,9 @@
  /*eslint-disable*/
-import "./set-public-path";
 import Vue from "vue";
 import singleSpaVue from "single-spa-vue";
+
 import App from "./App.vue";
+import '@babel/polyfill';
 import vuetify from "./plugins/vuetify";
 
 import Managing from "./components";

@@ -1,77 +1,19 @@
  /*eslint-disable*/
-import "./set-public-path";
 import Vue from "vue";
 import singleSpaVue from "single-spa-vue";
+
 import App from "./App.vue";
-import vuetify from "./plugins/vuetify";
-import Managing from "./components";
 import router from "./router";
+import vuetify from "./plugins/vuetify";
+
 
 {{#if (isSelectedSecurity options.rootModel.toppingPlatforms)}}
 import Keycloak from 'keycloak-js';
 {{/if}}
 
 Vue.config.productionTip = false;
+
 require('./GlobalStyle.css');
-
-const axios = require("axios").default;
-
-// backend host url
-axios.backend = null; //"http://localhost:8088";
-
-// axios.backendUrl = new URL(axios.backend);
-axios.fixUrl = function(original){
-
-  if(!axios.backend && original.indexOf("/")==0) return original;
-
-  var url = null;
-
-  try{
-    url = new URL(original);
-  }catch(e){
-    url = new URL(axios.backend + original);
-  }
-
-  if(!axios.backend) return url.pathname;
-
-  url.hostname = axios.backendUrl.hostname;
-  url.port = axios.backendUrl.port;
-
-  return url.href;
-}
-
-const templateFiles = require.context("./components", true);
-Vue.prototype.$ManagerLists = [];
-templateFiles.keys().forEach(function(tempFiles) {
-  if (!tempFiles.includes("Manager.vue") && tempFiles.includes("vue")) {
-    Vue.prototype.$ManagerLists.push(
-      tempFiles.replace("./", "").replace(".vue", "")
-    );
-  }
-});
-Vue.use(Managing);
-const pluralCaseList = []
-
-{{#aggregates}}
-pluralCaseList.push( {plural: "{{boundedContext.namePlural}}/{{namePlural}}", pascal: "{{boundedContext.namePascalCase}}{{namePascalCase}}"} )
-{{/aggregates}}
-
-{{#viewes}}
-pluralCaseList.push( {plural: "{{namePlural}}", pascal: "{{namePascalCase}}"} )
-{{/viewes}}
-
-Vue.prototype.$ManagerLists.forEach(function(item, idx) {
-  pluralCaseList.forEach(function(tmp) {
-    if(item.toLowerCase() == tmp.pascal.toLowerCase()) {
-      var obj = {
-        name: item,
-        plural: tmp.plural
-      }
-      Vue.prototype.$ManagerLists[idx] = obj
-    }
-  })
-})
-
 
 {{#if (isSelectedSecurity options.rootModel.toppingPlatforms)}}
 let initOptions = {
@@ -102,8 +44,8 @@ function init() {
     const vueLifecycles = singleSpaVue({
       Vue,
       appOptions: {
+        vuetify: vuetify,
         router,
-        vuetify,
         render: h => h(App, {
           props: {
             OAuth: keycloak,
@@ -113,6 +55,7 @@ function init() {
     });
     
     window.setTimeout(refreshToken.bind(null, keycloak), ONE_MINUTE);
+
   }).catch(() => {
     console.error(`Auth Fail`);
   })
@@ -144,8 +87,8 @@ function errorRefresh() {
 const vueLifecycles = singleSpaVue({
   Vue,
   appOptions: {
+    vuetify: vuetify,
     router,
-    vuetify,
     render: h => h(App),
   }
 });

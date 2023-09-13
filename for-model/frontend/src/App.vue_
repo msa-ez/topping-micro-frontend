@@ -2,84 +2,94 @@ fileName: App.vue
 ---
 <template>
     <v-app>
-        <div>
-            <v-app-bar color="primary" app clipped-left flat>
-                <v-toolbar-title>
-                    <span class="second-word font uppercase"
-                        style="font-weight:700;"
-                    >
-                        <v-app-bar-nav-icon
-                            @click="openSideBar()"
-                            style="z-index:1;
-                            height:56px;
-                            width:30px;
-                            margin-right:10px;
-                            font-weight:300;
-                            font-size:55px;"
-                        >
-                            <div style="line-height:100%;">≡</div>
-                        </v-app-bar-nav-icon>
-                    </span>
-                </v-toolbar-title>
-                <span v-if="urlPath!=null" 
-                    class="mdi mdi-home" 
-                    key="" 
-                    to="/" 
-                    @click="goHome()"
-                    style="margin-left:10px; font-size:20px; cursor:pointer;"
-		        ></span> 
-                <v-spacer></v-spacer>
-
-                {{#if (isSelectedSecurity options.rootModel.toppingPlatforms)}}
-                <b style="margin-left:10px">\{{username}} 님</b>
-                <v-btn
-                    text
-                    color="white"
-                    style="font-size:10px"
-                    @click="logout()"
+        <v-app-bar 
+                app 
+                clipped-left 
+                flat
+                color="primary"
+        >
+            <v-toolbar-title>
+                <span class="second-word font uppercase"
+                    style="font-weight:700;"
                 >
-                    Logout
-                </v-btn>
-                {{else}}
-                {{/if}}
-            </v-app-bar>
-
-            <v-navigation-drawer app clipped flat v-model="sideBar">
-                <v-list>
-		    {{#boundedContexts}}
-    		    {{#aggregates}}
-                    <v-list-item
-                        class="px-2"
-                        key="{{namePlural}}"
-                        to="/{{boundedContext.namePlural}}/{{namePlural}}"
-                        @click="changeUrl()"
-                        color="primary"
-                        style="font-weight:700;"
+                    <v-app-bar-nav-icon
+                        @click="openSideBar()"
+                        style="z-index:1;
+                        height:56px;
+                        width:30px;
+                        margin-right:10px;
+                        font-weight:300;
+                        font-size:55px;"
                     >
-                        {{#ifNotNull displayName namePascalCase}}{{/ifNotNull}}
-                    </v-list-item>
+                        <div style="line-height:100%;">≡</div>
+                    </v-app-bar-nav-icon>
+                </span>
+            </v-toolbar-title>
 
-    		    {{/aggregates}}
+            <span v-if="urlPath!=null" 
+                class="mdi mdi-home" 
+                key="" 
+                to="/" 
+                @click="goHome()"
+                style="margin-left:10px; font-size:20px; cursor:pointer;"
+            ></span>
+            
+            <v-spacer></v-spacer>
 
-    		    {{#viewes}}
-                    <v-list-item
-                        class="px-2"
-                        key="{{namePlural}}"
-                        to="{{namePlural}}"
-                        @click="changeUrl()"
-                        color="primary"
-                        style="font-weight:700;"
-                    >
-                        {{namePascalCase}}
-                    </v-list-item>
-    		    {{/viewes}}
-		    {{/boundedContexts}}
-                </v-list>
-            </v-navigation-drawer>
-        </div>
+            {{#if (isSelectedSecurity options.rootModel.toppingPlatforms)}}
+            <b style="margin-left:10px">\{{username}} 님</b>
+            <v-btn
+                text
+                color="white"
+                style="font-size:10px"
+                @click="logout()"
+            >
+                Logout
+            </v-btn>
+            {{else}}
+            {{/if}}
+        </v-app-bar>
+
+        <v-navigation-drawer 
+                v-model="sideBar"
+                app 
+                clipped 
+                flat 
+        >
+            <v-list>
+        {{#boundedContexts}}
+            {{#aggregates}}
+                <v-list-item
+                    class="px-2"
+                    key="{{namePlural}}"
+                    to="/{{boundedContext.namePlural}}/{{namePlural}}"
+                    @click="changeUrl()"
+                    color="primary"
+                    style="font-weight:700;"
+                >
+                    {{#ifNotNull displayName namePascalCase}}{{/ifNotNull}}
+                </v-list-item>
+
+            {{/aggregates}}
+
+            {{#viewes}}
+                <v-list-item
+                    class="px-2"
+                    key="{{namePlural}}"
+                    to="{{namePlural}}"
+                    @click="changeUrl()"
+                    color="primary"
+                    style="font-weight:700;"
+                >
+                    {{namePascalCase}}
+                </v-list-item>
+            {{/viewes}}
+        {{/boundedContexts}}
+            </v-list>
+        </v-navigation-drawer>
 
         <v-main>
-            <v-container style="padding:0px;" fluid>
+            <v-container style="padding:0px;" v-if="urlPath" fluid>
                 <router-view></router-view>
             </v-container>
             <v-container style="padding:0px;" v-else fluid>
