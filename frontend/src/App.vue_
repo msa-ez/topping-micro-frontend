@@ -1,13 +1,11 @@
 fileName: App.vue
 ---
 <template>
-    <v-app>
-        <v-container>
-            <component
-                    :is="getComponentName"
-            ></component>
-        </v-container>
-    </v-app>
+    <v-container class="main_container">
+        <component
+                :is="getComponentName"
+        ></component>
+    </v-container>
 </template>
 
 <script>
@@ -18,7 +16,7 @@ fileName: App.vue
             {{#aggregates}}
                 { 
                     path: '/{{boundedContext.namePlural}}/{{namePlural}}',
-                    componentName: '{{boundedContext.namePascalCase}}{{namePascalCase}}Manager',
+                    componentName: '{{boundedContext.namePascalCase}}{{namePascalCase}}Cards',
                 },
                 {
                     path: '/{{boundedContext.namePlural}}/{{namePlural}}/:id',
@@ -37,12 +35,17 @@ fileName: App.vue
             {{/views}}
             ],
         }),
+        computed: {
+            urlPath() {
+                return location.pathname
+            }
+        },
         methods: {
             getComponentName() {
                 var componentName = "";
                 this.routes.forEach(item => {
-                    if (item.path === location.href) {
-                        name = item.componentName;
+                    if (item.path === this.urlPath) {
+                        componentName = item.componentName;
                     }
                 });
                 return componentName;
@@ -52,4 +55,9 @@ fileName: App.vue
 </script>
 
 <style>
+.main_container {
+    margin: 64px 0 0 256px;
+    width: calc(100vw - 256px); 
+    height: calc(100vh - 64px);
+}
 </style>
