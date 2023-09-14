@@ -26,13 +26,9 @@ fileName: App.vue
                 </span>
             </v-toolbar-title>
 
-            <span v-if="urlPath!=null" 
-                class="mdi mdi-home" 
-                key="" 
-                to="/" 
-                @click="goHome()"
-                style="margin-left:10px; font-size:20px; cursor:pointer;"
-            ></span>
+            <v-btn icon to="/">
+                <v-icon>mdi-home</v-icon>
+            </v-btn>
             
             <v-spacer></v-spacer>
 
@@ -63,13 +59,11 @@ fileName: App.vue
                     class="px-2"
                     key="{{namePlural}}"
                     to="/{{boundedContext.namePlural}}/{{namePlural}}"
-                    @click="changeUrl()"
                     color="primary"
                     style="font-weight:700;"
                 >
                     {{#ifNotNull displayName namePascalCase}}{{/ifNotNull}}
                 </v-list-item>
-
             {{/aggregates}}
 
             {{#viewes}}
@@ -77,7 +71,6 @@ fileName: App.vue
                     class="px-2"
                     key="{{namePlural}}"
                     to="{{namePlural}}"
-                    @click="changeUrl()"
                     color="primary"
                     style="font-weight:700;"
                 >
@@ -89,144 +82,44 @@ fileName: App.vue
         </v-navigation-drawer>
 
         <v-main>
-            <v-container style="padding:0px;" v-if="urlPath" fluid>
-                <router-view></router-view>
-            </v-container>
-            <v-container style="padding:0px;" v-else fluid>
-                <div style="width:100%; margin:0px 0px 20px 0px; position: relative;">
-                    <v-img style="width:100%; height:300px;"
-                        src="{{#if options.rootModel.uiStyle.logoImage}}{{{options.rootModel.uiStyle.logoImage.url}}}{{/if}}"
-                    ></v-img>
-                    <div class="App-main-text-overlap">{{options.rootModel.uiStyle.serviceDescription.title}}</div>
-                    <div class="App-sub-text-overlap">{{options.rootModel.uiStyle.serviceDescription.serviceDescription}}</div>
-                </div>
-                <v-row>
-                    <v-col cols="4" class="d-flex justify-center" v-for="(aggregate, index) in aggregate" :key="index">
-                        <div 
-                            class="flip-card"
-                            @mouseover="flipCard(index)"
-                            @mouseleave="unflipCard(index)"
-                            :class="{ 'is-flipped': flipped[index] }"
-                        >
-                            <div class="flip-card-inner">
-                                <div class="flip-card-front">
-                                    <v-card
-                                        class="mx-auto"
-                                        style="width:300px; min-height: 310px; margin-bottom:20px; text-align: center; border-radius: 10px;"
-                                        outlined
-                                    >
-                                        <v-list-item style="padding:15px; margin:0px;">
-                                            <v-img style="width:100%; height:120px; border-radius: 10px;" :src="aggregate.ImageUrl"></v-img>
-                                        </v-list-item>
-                                        <div style="text-align: left; padding:10px 15px 15px 15px; margin-top:-10px;">
-                                            <h2>\{{ aggregate.title }}</h2>
-                                            <div>\{{ aggregate.description }}</div>
-                                        </div>
-                                    </v-card>
-                                </div>
-                                <div class="flip-card-back">
-                                    <v-card
-                                        color="primary"
-                                        class="mx-auto"
-                                        style="width:300px; min-height: 310px; margin-bottom:20px; text-align: center; border-radius: 10px;"
-                                        outlined
-                                        :key="aggregate.key"
-                                        :to="aggregate.route"
-                                        @click="changeUrl()"
-                                    >
-                                        <v-list-item style="padding:15px; margin:0px;">
-                                            <v-img style="width:100%; height:120px; border-radius: 10px;" :src="aggregate.ImageUrl"></v-img>
-                                        </v-list-item>
-                                        <h2 style="color:white;">\{{ aggregate.title }} 관리</h2>
-                                    </v-card>
-                                </div>
-                            </div>
-                        </div>
-                    </v-col>
-                </v-row>
-            </v-container>
+            <router-view></router-view>
         </v-main>
     </v-app>
 </template>
 
 <script>
-export default {
-    name: "App",
-    data: () => ({
-        useComponent: "",
-        drawer: true,
-        components: {},
-        sideBar: true,
-        urlPath: null,
-        menus: [
-            {{#boundedContexts}}
-            { id: '{{nameCamelCase}}', title: '{{#ifNotNull displayName namePascalCase}}{{/ifNotNull}}',
-                items: [
-                    {{#aggregates}}
-                    { key: '{{namePlural}}', url: '/{{namePlural}}', name: '{{#ifNotNull displayName namePascalCase}}{{/ifNotNull}}' },
-                    {{/aggregates}}
-                ]
-            },
-            {{/boundedContexts}}
-        ],
-        cards: [
-            {{#boundedContexts}}
-            {{#aggregates}}
-            {
-                text: "{{#ifNotNull displayName namePascalCase}}{{/ifNotNull}}",
-                link: "/{{namePlural}}",
-            },
-            {{/aggregates}}
-            {{/boundedContexts}}
-        ],
-        aggregate: [
-            {{#boundedContexts}}
-            {{#aggregates}}
-            { 
-                title: '{{#ifNotNull displayName namePascalCase}}{{/ifNotNull}}', 
-                description: '{{description}}', 
-                key: '{{namePlural}}', 
-                route: '/{{boundedContext.namePlural}}/{{namePlural}}',
-                ImageUrl: '{{#if options.rootModel.uiStyle.logoImage}}{{{options.rootModel.uiStyle.logoImage.url}}}{{/if}}',
-            },
-            {{/aggregates}}
-            {{/boundedContexts}}
-        ],
-        activeMenu: null
-    }),
-    
-    async created() {
-      var path = document.location.href.split("#/")
-      this.urlPath = path[1];
-    },
+    export default {
+        name: "App",
+        data: () => ({
+            sideBar: true,
+            {{#if (isSelectedSecurity options.rootModel.toppingPlatforms)}}
+            username: '',
+            {{/if}}
+        }),
+        created() {
+        {{#if (isSelectedSecurity options.rootModel.toppingPlatforms)}}
+            var me = this
+            me.username = me.$OAuth.idTokenParsed.preferred_username
 
-    mounted() {
-        var me = this;
-        me.components = this.$ManagerLists;
-    },
-    computed: {
-        activeMenuItems() {
-            const activeMenu = this.menus.find(menu => menu.id === this.activeMenu);
-            return activeMenu ? activeMenu.items : [];
+            if(!me.username){
+                location.reload()
+            }
+        {{/if}}
+        },
+        methods: {
+            openSideBar(){
+                this.sideBar = !this.sideBar
+            },
+            {{#if (isSelectedSecurity options.rootModel.toppingPlatforms)}}
+            logout(){
+                if(confirm("로그아웃 하시겠습니까?")){
+                    localStorage.clear()
+                    location.href = 'http://localhost:9090/realms/master/protocol/openid-connect/logout'
+                }
+            },
+            {{/if}}
         }
-    },
-    methods: {
-        changeMenu(menuId) {
-            this.activeMenu = this.activeMenu === menuId ? null : menuId;
-        },
-        openSideBar(){
-            this.sideBar = !this.sideBar
-        },
-        changeUrl(url) {
-            this.urlPath = url;
-            window.location.href = url;
-        },
-        goHome() {
-            this.urlPath = null;
-            window.location.href = "/";
-        },
-    }
-};
+    };
 </script>
 
 <style>
@@ -239,5 +132,21 @@ window.$HandleBars.registerHelper('ifNotNull', function (displayName, name) {
     }else{
         return name;
     }
-})
+});
+
+window.$HandleBars.registerHelper('isSelectedSecurity', function (toppingPlatforms) {
+    var selectedSecurity = false;
+    try{
+        for(var i=0; i<toppingPlatforms.length; i++){
+            if(toppingPlatforms[i] == "keycloak-security" || toppingPlatforms[i] == "spring-security"){
+                selectedSecurity =  true;
+            }
+        }
+
+        return selectedSecurity;
+
+    } catch(e){
+        console.log(e)
+    }
+});
 </function>
