@@ -12,7 +12,7 @@ fileName: App.vue
 
 <script>
     export default {
-        name: "{{namePascalCase}}",
+        name: "App",
         data: () => ({
             routes: [
             {{#aggregates}}
@@ -25,7 +25,7 @@ fileName: App.vue
                     componentName: '{{boundedContext.namePascalCase}}{{namePascalCase}}Detail',
                 },
             {{/aggregates}}
-            {{#viewes}}
+            {{#views}}
                 {
                     path: '/{{namePlural}}',
                     componentName: '{{namePascalCase}}View',
@@ -34,7 +34,7 @@ fileName: App.vue
                     path: '/{{namePlural}}/:id',
                     componentName: '{{namePascalCase}}ViewDetail',
                 },
-            {{/viewes}}
+            {{/views}}
             ],
         }),
         methods: {
@@ -53,6 +53,3 @@ fileName: App.vue
 
 <style>
 </style>
-
-<function>
-</function>

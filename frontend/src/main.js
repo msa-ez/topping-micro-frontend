@@ -55,9 +55,9 @@ const pluralCaseList = []
 pluralCaseList.push( {plural: "{{boundedContext.namePlural}}/{{namePlural}}", pascal: "{{boundedContext.namePascalCase}}{{namePascalCase}}"} )
 {{/aggregates}}
 
-{{#viewes}}
+{{#views}}
 pluralCaseList.push( {plural: "{{namePlural}}", pascal: "{{namePascalCase}}"} )
-{{/viewes}}
+{{/views}}
 
 Vue.prototype.$ManagerLists.forEach(function(item, idx) {
   pluralCaseList.forEach(function(tmp) {

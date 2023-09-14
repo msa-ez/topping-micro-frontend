@@ -66,7 +66,7 @@ fileName: App.vue
                 </v-list-item>
             {{/aggregates}}
 
-            {{#viewes}}
+            {{#views}}
                 <v-list-item
                     class="px-2"
                     key="{{namePlural}}"
@@ -76,7 +76,7 @@ fileName: App.vue
                 >
                     {{namePascalCase}}
                 </v-list-item>
-            {{/viewes}}
+            {{/views}}
         {{/boundedContexts}}
             </v-list>
         </v-navigation-drawer>
