@@ -213,6 +213,15 @@ path: {{boundedContext.nameCamelCase}}/frontend/src/components
         }
     })
 
+    window.$HandleBars.registerHelper('checkVO', function (className, options) {
+        if(className.endsWith("Address") || className.endsWith("Photo") || className.endsWith("User") || className.endsWith("Email") 
+                || className.endsWith("Payment") || className.endsWith("Money")){
+            return options.fn(this);
+        } else {
+            return options.inverse(this);
+        }
+    })
+
     window.$HandleBars.registerHelper('checkListOfEntityMember', function (className, options) {
         if(className.indexOf("List") == 0) {
             return options.fn(this);

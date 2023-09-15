@@ -170,31 +170,8 @@ path: {{boundedContext.nameCamelCase}}/frontend/src/components
 <script>
     const axios = require('axios').default;
 
-    {{#aggregateRoot.fieldDescriptors}}
-    {{#if (isNotId nameCamelCase)}}
-    {{#if (isPrimitive className)}}
-    {{else}}
-    {{#checkVO className}}
-    import {{className}} from './vo/{{className}}.vue';
-    {{/checkVO}}
-    {{/if}}
-    {{/if}}
-    {{/aggregateRoot.fieldDescriptors}}
-
     export default {
         name: '{{boundedContext.namePascalCase}}{{namePascalCase}}',
-        components:{
-        {{#aggregateRoot.fieldDescriptors}}
-            {{#if (isNotId nameCamelCase)}}
-            {{#if (isPrimitive className)}}
-            {{else}}
-            {{#checkVO className}}
-            {{className}},
-            {{/checkVO}}
-            {{/if}}
-            {{/if}}
-        {{/aggregateRoot.fieldDescriptors}}
-        },
         props: {
             value: [Object, String, Number, Boolean, Array],
             editMode: Boolean,
@@ -402,10 +379,10 @@ path: {{boundedContext.nameCamelCase}}/frontend/src/components
             {{/commands}}
             {{#aggregateRoot.operations}}
             {{#setOperations ../commands name}}
-            async {{nameCamelCase}}() {
+            async {{name}}() {
                 try {
                     if(!this.offline) {
-                        var temp = await axios.put(axios.fixUrl(this.value._links['{{nameCamelCase}}'].href))
+                        var temp = await axios.put(axios.fixUrl(this.value._links['{{name}}'].href))
                         for(var k in temp.data) {
                             this.value[k]=temp.data[k];
                         }
@@ -491,6 +468,15 @@ path: {{boundedContext.nameCamelCase}}/frontend/src/components
             return "Boolean";
         } else if(className.includes("Date")) {
             return "Date";
+        }
+    })
+
+    window.$HandleBars.registerHelper('checkVO', function (className, options) {
+        if(className.endsWith("Address") || className.endsWith("Photo") || className.endsWith("User") || className.endsWith("Email") 
+                || className.endsWith("Payment") || className.endsWith("Money")){
+            return options.fn(this);
+        } else {
+            return options.inverse(this);
         }
     })
 

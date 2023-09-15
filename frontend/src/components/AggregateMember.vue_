@@ -205,31 +205,8 @@ path: {{boundedContext.nameCamelCase}}/frontend/src/components
     {{/if}}{{/each}}
     {{/referenceClass}}
 
-    {{#fieldDescriptors}}
-    {{#if (isNotId nameCamelCase)}}
-    {{#if (isPrimitive className)}}
-    {{else}}
-    {{#checkVO className}}
-    import {{className}} from './vo/{{className}}.vue';
-    {{/checkVO}}
-    {{/if}}
-    {{/if}}
-    {{/fieldDescriptors}}
-
     export default {
         name: '{{namePascalCase}}',
-        components:{
-        {{#fieldDescriptors}}
-            {{#if (isNotId nameCamelCase)}}
-            {{#if (isPrimitive className)}}
-            {{else}}
-            {{#checkVO className}}
-            {{className}},
-            {{/checkVO}}
-            {{/if}}
-            {{/if}}
-        {{/fieldDescriptors}}
-        },
         props: {
             value: [Object, String, Number, Boolean, Array],
             editMode: Boolean,
@@ -539,6 +516,15 @@ path: {{boundedContext.nameCamelCase}}/frontend/src/components
             return "Boolean";
         } else if(className.includes("Date")) {
             return "Date";
+        }
+    })
+
+    window.$HandleBars.registerHelper('checkVO', function (className, options) {
+        if(className.endsWith("Address") || className.endsWith("Photo") || className.endsWith("User") || className.endsWith("Email") 
+                || className.endsWith("Payment") || className.endsWith("Money")){
+            return options.fn(this);
+        } else {
+            return options.inverse(this);
         }
     })
 

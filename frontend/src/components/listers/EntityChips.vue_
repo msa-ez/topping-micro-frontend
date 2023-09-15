@@ -211,7 +211,16 @@ path: {{boundedContext.nameCamelCase}}/frontend/src/components/listers
         }
     })
 
-     window.$HandleBars.registerHelper('photoVO', function (className, options) {
+    window.$HandleBars.registerHelper('checkVO', function (className, options) {
+        if(className.endsWith("Address") || className.endsWith("Photo") || className.endsWith("User") || className.endsWith("Email") 
+                || className.endsWith("Payment") || className.endsWith("Money")){
+            return options.fn(this);
+        } else {
+            return options.inverse(this);
+        }
+    })
+
+    window.$HandleBars.registerHelper('photoVO', function (className, options) {
         if( className.endsWith("Photo") ){
             return options.fn(this);
         }
