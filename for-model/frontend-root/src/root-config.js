@@ -1,4 +1,4 @@
-path: frontend-root/src
+fileName: root-config.js
 ---
 import { registerApplication, start } from 'single-spa';
 import {

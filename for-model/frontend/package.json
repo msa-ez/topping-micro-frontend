@@ -1,3 +1,7 @@
+forEach: Model
+fileName: package.json
+path: for-model/frontend
+---
 {
   "name": "@my-app/home",
   "version": "0.1.0",

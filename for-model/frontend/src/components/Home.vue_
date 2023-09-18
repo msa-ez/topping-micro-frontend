@@ -1,5 +1,4 @@
 fileName: Home.vue
-path: frontend/src/components
 ---
 <template>
     <v-container fluid>
