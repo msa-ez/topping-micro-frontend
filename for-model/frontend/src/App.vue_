@@ -108,7 +108,7 @@ fileName: App.vue
         },
         computed: {
             urlPath() {
-                return location.pathname
+                return location.hash.replace('#', '')
             }
         },
         methods: {
