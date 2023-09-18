@@ -25,9 +25,9 @@ path: frontend-root/src
     <script type="systemjs-importmap">
       {
         "imports": {
-          "@my-app/home": "//localhost:8080/js/app.js",
+          "@my-app/home": "//localhost:9090/js/app.js",
           {{#boundedContexts}}
-          "@my-app/{{name}}": "//localhost:{{portGenerated}}/js/app.js",
+          "@my-app/{{name}}": "//localhost:{{#setPortNumber portGenerated}}{{/setPortNumber}}/js/app.js",
           {{/boundedContexts}}
           "@my-app/root-config": "/root-config.js"
         }
@@ -46,3 +46,9 @@ path: frontend-root/src
   <import-map-overrides-full show-when-local-storage="devtools" dev-libs></import-map-overrides-full>
 </body>
 </html>
+
+<function>
+  window.$HandleBars.registerHelper('setPortNumber', function (portGenerated) {
+    return portGenerated + 1010;
+  });
+</function>

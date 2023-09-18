@@ -1,3 +1,6 @@
+fileName: package.json
+path: {{boundedContext.nameCamelCase}}/frontend
+---
 {
   "name": "@my-app/{{name}}",
   "version": "0.1.0",
@@ -6,7 +9,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "serve:standalone": "vue-cli-service serve --mode standalone --port {{portGenerated}}"
+    "serve:standalone": "vue-cli-service serve --mode standalone --port {{#setPortNumber portGenerated}}{{/setPortNumber}}"
   },
   "dependencies": {
     "@babel/polyfill": "^7.4.4",
@@ -55,3 +58,9 @@
     "not dead"
   ]
 }
+
+<function>
+  window.$HandleBars.registerHelper('setPortNumber', function (portGenerated) {
+    return portGenerated + 1010;
+  });
+</function>

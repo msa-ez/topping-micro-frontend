@@ -102,7 +102,6 @@ path: {{boundedContext.nameCamelCase}}/frontend/src/components/listers
 
                         <v-card-actions>
                             <v-btn 
-                                v-on="on"
                                 class="mx-auto"
                                 outlined
                                 rounded
