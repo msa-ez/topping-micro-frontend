@@ -1,5 +1,4 @@
 fileName: package.json
-path: {{boundedContext.nameCamelCase}}/frontend
 ---
 {
   "name": "@my-app/{{name}}",
