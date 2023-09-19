@@ -1,4 +1,4 @@
-path: {{boundedContext.nameCamelCase}}/frontend/src
+path: {{nameCamelCase}}/frontend/src
 ---
 import Vue from 'vue'
 import Router from 'vue-router'
