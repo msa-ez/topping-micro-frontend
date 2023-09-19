@@ -60,6 +60,6 @@ fileName: package.json
 
 <function>
   window.$HandleBars.registerHelper('setPortNumber', function (portGenerated) {
-    return portGenerated + 1010;
+    return portGenerated + 920;
   });
 </function>
