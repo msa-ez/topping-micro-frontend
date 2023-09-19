@@ -1,3 +1,4 @@
+forEach: BoundedContext
 fileName: router.js
 path: {{nameCamelCase}}/frontend/src
 ---
