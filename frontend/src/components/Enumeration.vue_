@@ -12,7 +12,7 @@ path: {{boundedContext.nameCamelCase}}/frontend/src/components
                 <v-select
                         v-model="newValue"
                         :label="'name'"
-                        :items="{{pascalCase name}}List"
+                        :items="{{nameCamelCase}}List"
                 ></v-select>
             </div>
             <div v-else style="margin-top:-20px;">
