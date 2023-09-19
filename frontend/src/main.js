@@ -5,6 +5,7 @@ import singleSpaVue from "single-spa-vue";
 import App from "./App.vue";
 import '@babel/polyfill';
 import vuetify from "./plugins/vuetify";
+import router from "./router";
 
 import Managing from "./components";
 {{#if (isSelectedSecurity options.rootModel.toppingPlatforms)}}
@@ -107,6 +108,7 @@ function init() {
             OAuth: keycloak,
           },
         }),
+        router
       }
     });
     
@@ -144,6 +146,7 @@ const vueLifecycles = singleSpaVue({
   appOptions: {
     vuetify: vuetify,
     render: h => h(App),
+    router
   }
 });
 {{/if}}

@@ -195,7 +195,7 @@ path: {{boundedContext.nameCamelCase}}/frontend/src/components
         {{/isRestRepository}}
         {{/commands}}
         }),
-	async created() {
+	    async created() {
             {{#if (isSelectedSecurity options.rootModel.toppingPlatforms)}}
             var me = this
 

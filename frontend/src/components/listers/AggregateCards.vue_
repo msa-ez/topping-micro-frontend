@@ -136,7 +136,7 @@ path: {{boundedContext.nameCamelCase}}/frontend/src/components/listers
     import {{boundedContext.namePascalCase}}{{namePascalCase}} from './../{{boundedContext.namePascalCase}}{{namePascalCase}}.vue';
 
     export default {
-        name: '{{boundedContext.namePascalCase}}{{namePascalCase}}Cards',
+        name: '{{boundedContext.namePascalCase}}{{namePascalCase}}Manager',
         components: {
             {{boundedContext.namePascalCase}}{{namePascalCase}},
         },

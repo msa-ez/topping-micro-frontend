@@ -2,9 +2,7 @@ fileName: App.vue
 ---
 <template>
     <v-container class="main_container">
-        <component
-                :is="getComponentName"
-        ></component>
+        <router-view></router-view>
     </v-container>
 </template>
 
@@ -12,44 +10,13 @@ fileName: App.vue
     export default {
         name: "App",
         data: () => ({
-            routes: [
-            {{#aggregates}}
-                { 
-                    path: '/{{boundedContext.namePlural}}/{{namePlural}}',
-                    componentName: '{{boundedContext.namePascalCase}}{{namePascalCase}}Cards',
-                },
-                {
-                    path: '/{{boundedContext.namePlural}}/{{namePlural}}/:id',
-                    componentName: '{{boundedContext.namePascalCase}}{{namePascalCase}}Detail',
-                },
-            {{/aggregates}}
-            {{#views}}
-                {
-                    path: '/{{namePlural}}',
-                    componentName: '{{namePascalCase}}View',
-                },
-                {
-                    path: '/{{namePlural}}/:id',
-                    componentName: '{{namePascalCase}}ViewDetail',
-                },
-            {{/views}}
-            ],
         }),
-        computed: {
-            urlPath() {
-                return location.hash.replace('#', '')
-            }
+        created() {
+            const el = document.createElement('div')
+            el.setAttribute('data-app', true)
+            document.body.appendChild(el)
         },
         methods: {
-            getComponentName() {
-                var componentName = "";
-                this.routes.forEach(item => {
-                    if (item.path === this.urlPath) {
-                        componentName = item.componentName;
-                    }
-                });
-                return componentName;
-            }
         },
     };
 </script>

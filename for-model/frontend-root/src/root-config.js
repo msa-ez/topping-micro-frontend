@@ -8,7 +8,7 @@ import {
 } from 'single-spa-layout';
 
 const routes = constructRoutes(`
-<single-spa-router>
+<single-spa-router mode="hash" base="/">
 <div style="display: flex;">
   <div>
     <application name="@my-app/home"></application>

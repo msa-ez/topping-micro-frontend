@@ -1,5 +1,3 @@
-forEach: Model
-fileName: webpack.config.js
 path: for-model/frontend-root
 ---
 const path = require("path");
