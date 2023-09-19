@@ -1,3 +1,4 @@
+fileName: router.js
 path: {{nameCamelCase}}/frontend/src
 ---
 import Vue from 'vue'
@@ -47,10 +48,5 @@ export default new Router({
             component: {{namePascalCase}}ViewDetail,
         },
     {{/views}}
-        {
-            path: '/',
-            name: 'Home',
-            component: Home
-        },
     ]
 })
