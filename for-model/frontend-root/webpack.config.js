@@ -1,3 +1,5 @@
+forEach: Model
+fileName: webpack.config.js
 path: for-model/frontend-root
 ---
 const path = require("path");
@@ -28,6 +30,7 @@ module.exports = (env) => ({
     },
     disableHostCheck: true,
     historyApiFallback: true,
+    host: '0.0.0.0'
   },
   plugins: [
     new HtmlWebpackPlugin({

@@ -1,3 +1,5 @@
+forEach: Model
+fileName: router.js
 path: for-model/frontend-nav/src
 ---
 import Vue from 'vue'
