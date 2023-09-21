@@ -9,18 +9,14 @@ import {
 
 const routes = constructRoutes(`
 <single-spa-router mode="hash" base="/">
-<div style="display: flex;">
-  <div>
+  <route default>
     <application name="@my-app/home"></application>
-  </div>
-  <div>
+  </route>
 {{#boundedContexts}}
-    <route path="{{namePlural}}">
-      <application name="@my-app/{{name}}"></application>
-    </route>
+  <route path="{{namePlural}}">
+    <application name="@my-app/{{name}}"></application>
+  </route>
 {{/boundedContexts}}
-  </div>
-<div>
 </single-spa-router>
 `);
 
