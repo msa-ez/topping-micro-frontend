@@ -58,7 +58,7 @@ fileName: App.vue
                 <v-list-item
                     class="px-2"
                     key="{{namePlural}}"
-                    to="/{{boundedContext.namePlural}}/{{namePlural}}"
+                    to="/{{../namePlural}}/{{namePlural}}"
                     color="primary"
                     style="font-weight:700;"
                 >

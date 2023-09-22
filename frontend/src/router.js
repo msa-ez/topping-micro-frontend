@@ -27,14 +27,14 @@ export default new Router({
     routes: [
     {{#aggregates}}
         { 
-            path: '/{{boundedContext.namePlural}}/{{namePlural}}',
-            name: '{{boundedContext.namePascalCase}}{{namePascalCase}}Manager',
-            component: {{boundedContext.namePascalCase}}{{namePascalCase}}Manager,
+            path: '/{{../namePlural}}/{{namePlural}}',
+            name: '{{../namePascalCase}}{{namePascalCase}}Manager',
+            component: {{../namePascalCase}}{{namePascalCase}}Manager,
         },
         {
-            path: '/{{boundedContext.namePlural}}/{{namePlural}}/:id',
-            name: '{{boundedContext.namePascalCase}}{{namePascalCase}}Detail',
-            component: {{boundedContext.namePascalCase}}{{namePascalCase}}Detail,
+            path: '/{{../namePlural}}/{{namePlural}}/:id',
+            name: '{{../namePascalCase}}{{namePascalCase}}Detail',
+            component: {{../namePascalCase}}{{namePascalCase}}Detail,
         },
     {{/aggregates}}
     {{#views}}

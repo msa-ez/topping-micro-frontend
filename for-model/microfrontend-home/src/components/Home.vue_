@@ -75,7 +75,7 @@ export default {
                 title: '{{#ifNotNull displayName namePascalCase}}{{/ifNotNull}}', 
                 description: '{{description}}', 
                 key: '{{namePlural}}', 
-                route: '/{{boundedContext.namePlural}}/{{namePlural}}',
+                route: '/{{../namePlural}}/{{namePlural}}',
                 ImageUrl: '{{#if options.rootModel.uiStyle.logoImage}}{{{options.rootModel.uiStyle.logoImage.url}}}{{/if}}',
             },
             {{/aggregates}}

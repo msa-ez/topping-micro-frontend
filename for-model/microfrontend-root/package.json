@@ -1,6 +1,6 @@
 forEach: Model
 fileName: package.json
-path: for-model/frontend-root
+path: for-model/microfrontend-root
 ---
 {
   "name": "my-app",
