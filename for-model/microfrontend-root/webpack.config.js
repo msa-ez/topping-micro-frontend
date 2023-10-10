@@ -1,6 +1,6 @@
 forEach: Model
 fileName: webpack.config.js
-path: for-model/microfrontend-root
+path: microfrontend-root
 ---
 const path = require("path");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");

@@ -1,6 +1,6 @@
 forEach: Model
 fileName: package.json
-path: for-model/microfrontend-home
+path: microfrontend-home
 ---
 {
   "name": "@my-app/home",
