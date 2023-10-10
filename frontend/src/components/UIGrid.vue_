@@ -1,56 +1,56 @@
-forEach: View
-fileName: {{namePascalCase}}View.vue
+forEach: UI
+fileName: {{namePascalCase}}Grid.vue
 path: {{boundedContext.nameCamelCase}}/frontend/src/components
-except: {{contexts.isNotCQRS}}
+except: {{contexts.isNotGrid}}
 ---
 <template>
-
-    <v-data-table
-        :headers="headers"
-        :items="{{nameCamelCase}}"
-        :items-per-page="5"
-        class="elevation-1"
-    ></v-data-table>
-
+    <div>
+        <v-data-table
+                :headers="headers"
+                :items="value"
+                :items-per-page="5"
+                class="elevation-1"
+        ></v-data-table>
+    </div>
 </template>
 
 <script>
-    const axios = require('axios').default;
+    import BaseUIGrid from './base-ui/BaseUIGrid';
 
     export default {
-        name: '{{namePascalCase}}View',
-        props: {
-            value: Object,
-            editMode: Boolean,
-            isNew: Boolean
-        },
+        mixins: [BaseUIGrid],
+        {{#options.view}}
+        name: '{{namePascalCase}}-{{../namePascalCase}}',
+        {{/options.view}}
         data: () => ({
             headers: [
-              {{#fieldDescriptors}}
-                { text: "{{nameCamelCase}}", value: "{{nameCamelCase}}" },
-              {{/fieldDescriptors}}
+            {{#grid.columns}}
+                {
+                    text: '{{this}}',
+                    value: '{{this}}'
+                },
+            {{/grid.columns}}
             ],
-            {{nameCamelCase}} : [],
         }),
-          async created() {
-            var temp = await axios.get(axios.fixUrl('/{{namePlural}}'))
-
-            temp.data._embedded.{{namePlural}}.map(obj => obj.id=obj._links.self.href.split("/")[obj._links.self.href.split("/").length - 1])
-
-            this.{{nameCamelCase}} = temp.data._embedded.{{namePlural}};
+        async created() {
+            {{#options.view}}
+            const path = "{{namePlural}}"
+            await this.getValue(path);
+            {{/options.view}}
         },
-        methods: {
-        }
     }
 </script>
 
 
 <function>
-   this.contexts.isNotCQRS = this.dataProjection!="cqrs"
+    this.contexts.isNotGrid = this.uiType!="Grid"
+
+    let view = this.attached.find((ele) => ele._type.includes("View"));
+    options.view = view;
 
     window.$HandleBars.registerHelper('toURL', function (className) {
 
-        var pluralize = function(value, revert){
+        var pluralize = function(value, revert) {
 
             var plural = {
                 '(quiz)$'               : "$1zes",
@@ -131,36 +131,43 @@ except: {{contexts.isNotCQRS}}
 
             // save some time in the case that singular and plural are the same
             //console.log("value = " + value)
-            if(uncountable.indexOf(value.toLowerCase()) >= 0)
-            return this;
-
-            // check for irregular forms
-            for(var word in irregular){
-
-                if(revert){
-                        var pattern = new RegExp(irregular[word]+'$', 'i');
-                        var replace = word;
-                } else{ var pattern = new RegExp(word+'$', 'i');
-                        var replace = irregular[word];
-                }
-                if(pattern.test(value))
-                    return value.replace(pattern, replace);
+            if(uncountable.indexOf(value.toLowerCase()) >= 0) {
+                return this;
             }
 
-            if(revert) var array = singular;
-                else  var array = plural;
+            // check for irregular forms
+            for(var word in irregular) {
+                if(revert) {
+                    var pattern = new RegExp(irregular[word]+'$', 'i');
+                    var replace = word;
+                } else {
+                    var pattern = new RegExp(word+'$', 'i');
+                    var replace = irregular[word];
+                }
+                if(pattern.test(value)) {
+                    return value.replace(pattern, replace);
+                }
+            }
+
+            if(revert) {
+                var array = singular;
+            } else {
+                var array = plural;
+            }
 
             // check for matches using regular expressions
-            for(var reg in array){
-
+            for(var reg in array) {
                 var pattern = new RegExp(reg, 'i');
 
-                if(pattern.test(value))
+                if(pattern.test(value)) {
                     return value.replace(pattern, array[reg]);
+                }
             }
 
             return value;
         }
-        return pluralize(className.toLowerCase())
+
+        return pluralize(className.toLowerCase());
     })
+
 </function>

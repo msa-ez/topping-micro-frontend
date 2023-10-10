@@ -1,56 +1,67 @@
-forEach: View
-fileName: {{namePascalCase}}View.vue
+forEach: UI
+fileName: {{namePascalCase}}Card.vue
 path: {{boundedContext.nameCamelCase}}/frontend/src/components
-except: {{contexts.isNotCQRS}}
+except: {{contexts.isNotCard}}
 ---
 <template>
+    <div>
+        <v-card v-for="(item, idx) in value"
+                :key="idx"
+        >
+            <v-card-title>
+                \{{ item.{{card.title}} }}
+            </v-card-title>
+            
+            {{#if (useSubtitle card)}}
+            <v-card-subtitle>
+                \{{ item.{{card.subtitle}} }}
+            </v-card-subtitle>
+            {{/if}}
 
-    <v-data-table
-        :headers="headers"
-        :items="{{nameCamelCase}}"
-        :items-per-page="5"
-        class="elevation-1"
-    ></v-data-table>
-
+            <v-card-text>
+                \{{ item.{{card.text}} }}
+            </v-card-text>
+        </v-card>
+    </div>
 </template>
 
 <script>
-    const axios = require('axios').default;
+    import BaseUICard from './base-ui/BaseUICard';
 
     export default {
-        name: '{{namePascalCase}}View',
-        props: {
-            value: Object,
-            editMode: Boolean,
-            isNew: Boolean
-        },
+        mixins: [BaseUICard],
+        {{#options.view}}
+        name: '{{namePascalCase}}-{{../namePascalCase}}',
+        {{/options.view}}
         data: () => ({
-            headers: [
-              {{#fieldDescriptors}}
-                { text: "{{nameCamelCase}}", value: "{{nameCamelCase}}" },
-              {{/fieldDescriptors}}
-            ],
-            {{nameCamelCase}} : [],
         }),
-          async created() {
-            var temp = await axios.get(axios.fixUrl('/{{namePlural}}'))
-
-            temp.data._embedded.{{namePlural}}.map(obj => obj.id=obj._links.self.href.split("/")[obj._links.self.href.split("/").length - 1])
-
-            this.{{nameCamelCase}} = temp.data._embedded.{{namePlural}};
+        async created() {
+            {{#options.view}}
+            const path = "{{namePlural}}"
+            await this.getValue(path);
+            {{/options.view}}
         },
-        methods: {
-        }
     }
 </script>
 
 
 <function>
-   this.contexts.isNotCQRS = this.dataProjection!="cqrs"
+    this.contexts.isNotCard = this.uiType!="Card"
+
+    let view = this.attached.find((ele) => ele._type.includes("View"));
+    options.view = view;
+
+    window.$HandleBars.registerHelper('useSubtitle', function (card) {
+        if (card.subtitle && card.subtitle !== "") {
+            return true;
+        } else {
+            return false;
+        }
+    })
 
     window.$HandleBars.registerHelper('toURL', function (className) {
 
-        var pluralize = function(value, revert){
+        var pluralize = function(value, revert) {
 
             var plural = {
                 '(quiz)$'               : "$1zes",
@@ -131,36 +142,43 @@ except: {{contexts.isNotCQRS}}
 
             // save some time in the case that singular and plural are the same
             //console.log("value = " + value)
-            if(uncountable.indexOf(value.toLowerCase()) >= 0)
-            return this;
-
-            // check for irregular forms
-            for(var word in irregular){
-
-                if(revert){
-                        var pattern = new RegExp(irregular[word]+'$', 'i');
-                        var replace = word;
-                } else{ var pattern = new RegExp(word+'$', 'i');
-                        var replace = irregular[word];
-                }
-                if(pattern.test(value))
-                    return value.replace(pattern, replace);
+            if(uncountable.indexOf(value.toLowerCase()) >= 0) {
+                return this;
             }
 
-            if(revert) var array = singular;
-                else  var array = plural;
+            // check for irregular forms
+            for(var word in irregular) {
+                if(revert) {
+                    var pattern = new RegExp(irregular[word]+'$', 'i');
+                    var replace = word;
+                } else {
+                    var pattern = new RegExp(word+'$', 'i');
+                    var replace = irregular[word];
+                }
+                if(pattern.test(value)) {
+                    return value.replace(pattern, replace);
+                }
+            }
+
+            if(revert) {
+                var array = singular;
+            } else {
+                var array = plural;
+            }
 
             // check for matches using regular expressions
-            for(var reg in array){
-
+            for(var reg in array) {
                 var pattern = new RegExp(reg, 'i');
 
-                if(pattern.test(value))
+                if(pattern.test(value)) {
                     return value.replace(pattern, array[reg]);
+                }
             }
 
             return value;
         }
-        return pluralize(className.toLowerCase())
+
+        return pluralize(className.toLowerCase());
     })
+
 </function>

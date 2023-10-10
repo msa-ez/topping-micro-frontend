@@ -1,43 +1,51 @@
-forEach: View
-fileName: {{namePascalCase}}View.vue
+forEach: UI
+fileName: {{namePascalCase}}Chart.vue
 path: {{boundedContext.nameCamelCase}}/frontend/src/components
-except: {{contexts.isNotCQRS}}
+except: {{contexts.isNotChart}}
 ---
 <template>
-
-    <v-data-table
-        :headers="headers"
-        :items="{{nameCamelCase}}"
-        :items-per-page="5"
-        class="elevation-1"
-    ></v-data-table>
-
+    <div>
+        <apexchart 
+                width="800" 
+                :type="type" 
+                :options="options"
+                :series="series"
+                ref="{{chart.type}}Chart"
+        ></apexchart>
+    </div>
 </template>
 
 <script>
-    const axios = require('axios').default;
+    import BaseUIChart from './base-ui/BaseUIChart';
+    import VueApexCharts from 'vue-apexcharts';
 
     export default {
-        name: '{{namePascalCase}}View',
-        props: {
-            value: Object,
-            editMode: Boolean,
-            isNew: Boolean
+        mixins: [BaseUIChart],
+        name: '{{namePascalCase}}Chart',
+        components: {
+            'apexchart': VueApexCharts,
         },
         data: () => ({
-            headers: [
-              {{#fieldDescriptors}}
-                { text: "{{nameCamelCase}}", value: "{{nameCamelCase}}" },
-              {{/fieldDescriptors}}
-            ],
-            {{nameCamelCase}} : [],
+            type: "{{chart.type}}",
         }),
-          async created() {
-            var temp = await axios.get(axios.fixUrl('/{{namePlural}}'))
+        async created() {
+            {{#options.view}}
+            const path = "{{namePlural}}"
+            await this.getValue(path);
 
-            temp.data._embedded.{{namePlural}}.map(obj => obj.id=obj._links.self.href.split("/")[obj._links.self.href.split("/").length - 1])
+            const type = "{{../chart.type}}";
+            {{#if (isPieChart ../chart.type)}}
+            const labels = {{#setFieldMapping ../chart.fieldMapping.category}}{{/setFieldMapping}};
+            const data = {{#setFieldMapping ../chart.fieldMapping.data}}{{/setFieldMapping}};
+            await this.setValue(type, labels, data);
+            {{else}}
+            const categories = {{#setFieldMapping ../chart.fieldMapping.category}}{{/setFieldMapping}};
+            const data = {{#setFieldMapping ../chart.fieldMapping.data}}{{/setFieldMapping}};
+            await this.setValue(type, categories, data);
+            {{/if}}
+            {{/options.view}}
 
-            this.{{nameCamelCase}} = temp.data._embedded.{{namePlural}};
+            this.$refs.{{chart.type}}Chart.refresh();
         },
         methods: {
         }
@@ -46,11 +54,36 @@ except: {{contexts.isNotCQRS}}
 
 
 <function>
-   this.contexts.isNotCQRS = this.dataProjection!="cqrs"
+    this.contexts.isNotChart = this.uiType!="Chart"
+
+    let view = this.attached.find((ele) => ele._type.includes("View"));
+    options.view = view;
+
+    window.$HandleBars.registerHelper('isPieChart', function (type) {
+        if (type.includes("pie")) {
+            return true;
+        } else {
+            return false;
+        }
+    })
+
+    window.$HandleBars.registerHelper('setFieldMapping', function (fields) {
+        let text = "[ ";
+        if (fields && fields.length > 0) {
+            fields.forEach((field, index) => {
+                text += `"${field}"`;
+                if (index < fields.length-1) {
+                    text += ", "
+                }
+            })
+        }
+        text += " ]";
+        return text;
+    })
 
     window.$HandleBars.registerHelper('toURL', function (className) {
 
-        var pluralize = function(value, revert){
+        var pluralize = function(value, revert) {
 
             var plural = {
                 '(quiz)$'               : "$1zes",
@@ -131,36 +164,43 @@ except: {{contexts.isNotCQRS}}
 
             // save some time in the case that singular and plural are the same
             //console.log("value = " + value)
-            if(uncountable.indexOf(value.toLowerCase()) >= 0)
-            return this;
-
-            // check for irregular forms
-            for(var word in irregular){
-
-                if(revert){
-                        var pattern = new RegExp(irregular[word]+'$', 'i');
-                        var replace = word;
-                } else{ var pattern = new RegExp(word+'$', 'i');
-                        var replace = irregular[word];
-                }
-                if(pattern.test(value))
-                    return value.replace(pattern, replace);
+            if(uncountable.indexOf(value.toLowerCase()) >= 0) {
+                return this;
             }
 
-            if(revert) var array = singular;
-                else  var array = plural;
+            // check for irregular forms
+            for(var word in irregular) {
+                if(revert) {
+                    var pattern = new RegExp(irregular[word]+'$', 'i');
+                    var replace = word;
+                } else {
+                    var pattern = new RegExp(word+'$', 'i');
+                    var replace = irregular[word];
+                }
+                if(pattern.test(value)) {
+                    return value.replace(pattern, replace);
+                }
+            }
+
+            if(revert) {
+                var array = singular;
+            } else {
+                var array = plural;
+            }
 
             // check for matches using regular expressions
-            for(var reg in array){
-
+            for(var reg in array) {
                 var pattern = new RegExp(reg, 'i');
 
-                if(pattern.test(value))
+                if(pattern.test(value)) {
                     return value.replace(pattern, array[reg]);
+                }
             }
 
             return value;
         }
-        return pluralize(className.toLowerCase())
+
+        return pluralize(className.toLowerCase());
     })
+
 </function>

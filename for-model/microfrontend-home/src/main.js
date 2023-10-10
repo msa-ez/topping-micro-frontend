@@ -1,21 +1,15 @@
  /*eslint-disable*/
 import Vue from "vue";
-import singleSpaVue from "single-spa-vue";
-
 import App from "./App.vue";
-import router from "./router";
 import vuetify from "./plugins/vuetify";
-
-
-{{#if (isSelectedSecurity options.rootModel.toppingPlatforms)}}
+import router from "./router";
 import Keycloak from 'keycloak-js';
-{{/if}}
-
 Vue.config.productionTip = false;
 
-require('./GlobalStyle.css');
+import singleSpaVue from "single-spa-vue";
 
-{{#if (isSelectedSecurity options.rootModel.toppingPlatforms)}}
+require('./style.css');
+
 let initOptions = {
   url: `http://localhost:9090/`,
   realm: `master`,
@@ -57,6 +51,16 @@ function init() {
     window.setTimeout(refreshToken.bind(null, keycloak), ONE_MINUTE);
 
   }).catch(() => {
+
+    const vueLifecycles = singleSpaVue({
+      Vue,
+      appOptions: {
+        vuetify: vuetify,
+        router,
+        render: h => h(App),
+      }
+    });
+
     console.error(`Auth Fail`);
   })
 }
@@ -83,34 +87,8 @@ function warnRefresh() {
 function errorRefresh() {
   console.error('Failed to refresh token');
 }
-{{else}}
-const vueLifecycles = singleSpaVue({
-  Vue,
-  appOptions: {
-    vuetify: vuetify,
-    router,
-    render: h => h(App),
-  }
-});
-{{/if}}
 
 export const bootstrap = vueLifecycles.bootstrap;
 export const mount = vueLifecycles.mount;
 export const unmount = vueLifecycles.unmount;
 
-<function>
-window.$HandleBars.registerHelper('isSelectedSecurity', function (selectedSecurity) {
-    try{
-        var isSelectedSecurity = false
-        for(var i=0; i<selectedSecurity.length; i++){
-            if(selectedSecurity[i] == 'keycloak-security'){
-                isSelectedSecurity =  true;
-            }
-        }
-
-        return isSelectedSecurity;
-    } catch(e){
-        console.log(e)
-    }
-});
-</function>

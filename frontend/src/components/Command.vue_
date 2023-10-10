@@ -29,7 +29,7 @@ path: {{boundedContext.nameCamelCase}}/frontend/src/components
         <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn
-                    color="primary"
+                    color="deep-purple lighten-2"
                     text
                     @click="{{nameCamelCase}}"
             >
@@ -37,7 +37,7 @@ path: {{boundedContext.nameCamelCase}}/frontend/src/components
             </v-btn>
             
             <v-btn
-                    color="primary"
+                    color="deep-purple lighten-2"
                     text
                     @click="close"
             >
@@ -49,7 +49,6 @@ path: {{boundedContext.nameCamelCase}}/frontend/src/components
 </template>
 
 <script>
-   
     export default {
         name: '{{namePascalCase}}Command',
         components:{},

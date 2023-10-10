@@ -3,19 +3,18 @@ fileName: {{pascalCase name}}.vue
 path: {{boundedContext.nameCamelCase}}/frontend/src/components
 ---
 <template>
-    <div style="margin: 0 -15px 0 -15px;">
-        <v-card-title>
-            {{pascalCase name}}
-        </v-card-title>
+    <div style="margin: -10px -15px 0 -15px;">
         <v-card-text>
-            <div v-if="editMode" style="margin-top:-20px;">
+            <div class="label-title">{{label}}</div>
+            <div v-if="editMode">
                 <v-select
-                        v-model="newValue"
-                        :label="'name'"
-                        :items="{{nameCamelCase}}List"
+                    v-model="newValue"
+                    :label="label"
+                    :items="selections"
+                    solo
                 ></v-select>
             </div>
-            <div v-else style="margin-top:-20px;">
+            <div v-else>
                 {{pascalCase name}} : \{{ value }}
             </div>
         </v-card-text>
@@ -23,24 +22,22 @@ path: {{boundedContext.nameCamelCase}}/frontend/src/components
 </template>
 
 <script>
+    import BaseEntity from './base-ui/BaseEntity.vue';
+
     export default {
         name: '{{pascalCase name}}',
+        mixins:[BaseEntity],
         components:{},
         props: {
-            value: [Object, String, Number, Boolean, Array],
-            editMode: Boolean,
-            isNew: Boolean,
-            offline: Boolean,
-            inList: Boolean,
-            label: String,
+            label: String
         },
         data: () => ({
-            {{nameCamelCase}}List : [{{#items}} "{{value}}", {{/items}}],
+            selections : [{{#items}}"{{value}}",{{/items}}],
             newValue: '',
         }),
         async created() {
             if(!this.value) {
-                this.newValue = this.{{nameCamelCase}}List[0];
+                this.newValue = this.{{camelCase name}}List[0];
             } else {
                 this.newValue = this.value;
             }

@@ -25,13 +25,12 @@ path: {{nameCamelCase}}/frontend/src/components/vo
 
             <div v-if="!editMode">
                 <p style="font-family:sans-serif; font-weight:bold; font-size:15px">\{{value.country }} / \{{value.state }} \{{value.city }}  \{{value.street }} (\{{value.zipcode }})</p>
-                <v-divider></v-divider><br>
                 <GmapMap
                     class="mx-auto"
                     :center="{lat:latitude, lng:longitude}"
                     :zoom="10"
                     map-type-id="terrain"
-                    style="width: 400px; height: 300px"
+                    style="width: 200px; height: 250px"
                     >
                     <GmapMarker
                         :key="index"
@@ -54,7 +53,7 @@ path: {{nameCamelCase}}/frontend/src/components/vo
 
     Vue.use(VueGoogleMaps, {
         load: {
-            key: 'AIzaSyC25WBJaWKmod3bV1gX1oAjq7Myu3bIHyY',
+            key: 'AIzaSyBfFhoG5L7KDWdI1FwXHxaJ-h1LZH-wvok',
             libraries: 'places', // This is required if you use the Autocomplete plugin
             region: "KR",
         },
