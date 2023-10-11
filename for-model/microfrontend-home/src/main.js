@@ -18,6 +18,8 @@ let initOptions = {
 };
 
 let keycloak = new Keycloak(initOptions);
+let useKeycloak = false;
+let vueLifecycles;
 
 init();
 
@@ -35,34 +37,37 @@ function init() {
 
     Vue.prototype.$OAuth = keycloak
 
-    const vueLifecycles = singleSpaVue({
-      Vue,
-      appOptions: {
-        vuetify: vuetify,
-        router,
-        render: h => h(App, {
-          props: {
-            OAuth: keycloak,
-          },
-        }),
-      }
-    });
+    useKeycloak = true;
     
     window.setTimeout(refreshToken.bind(null, keycloak), ONE_MINUTE);
 
   }).catch(() => {
-
-    const vueLifecycles = singleSpaVue({
-      Vue,
-      appOptions: {
-        vuetify: vuetify,
-        router,
-        render: h => h(App),
-      }
-    });
-
     console.error(`Auth Fail`);
   })
+}
+
+if (useKeycloak) {
+  vueLifecycles = singleSpaVue({
+    Vue,
+    appOptions: {
+      vuetify: vuetify,
+      router,
+      render: h => h(App, {
+        props: {
+          OAuth: keycloak,
+        },
+      }),
+    }
+  });
+} else {
+  vueLifecycles = singleSpaVue({
+    Vue,
+    appOptions: {
+      vuetify: vuetify,
+      router,
+      render: h => h(App),
+    }
+  });
 }
 
 function refreshToken() {
