@@ -13,7 +13,7 @@ fileName: App.vue
             <v-app-bar-nav-icon @click="openSideBar()"></v-app-bar-nav-icon>
 
             <v-toolbar-title class="font-weight-bold text-uppercase">
-                {{ projectName }}
+                {{ namePascalCase }}
             </v-toolbar-title>
 
             <v-icon class="ml-3" @click="$router.push('/')">
