@@ -1,6 +1,6 @@
 forEach: Aggregate
 fileName: {{namePascalCase}}Grid.vue
-path: {{boundedContext.nameCamelCase}}/frontend/src/components/ui
+path: {{nameCamelCase}}/frontend/src/components/ui
 ---
 <template>
     <div style="max-height:80vh;">

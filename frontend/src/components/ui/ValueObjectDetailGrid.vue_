@@ -1,6 +1,6 @@
 forEach: ValueObject
 fileName: {{namePascalCase}}DetailGrid.vue
-path: {{boundedContext.nameCamelCase}}/frontend/src/components/ui
+path: {{nameCamelCase}}/frontend/src/components/ui
 ---
 <template>
     <div>
