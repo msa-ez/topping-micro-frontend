@@ -7,7 +7,7 @@ fileName: App.vue
                 app
                 clipped-left
                 flat
-                dark
+                darj
                 color="primary"
         >
             <v-app-bar-nav-icon @click="openSideBar()"></v-app-bar-nav-icon>
