@@ -4,8 +4,23 @@ path: {{boundedContext.nameCamelCase}}/frontend/src/components
 ---
 <template>
     {{#referenceClass}}
-    <v-card outlined>
-        <{{../referenceClass}}Picker v-model="value" @selected="pick" :editMode="editMode" />
+    <v-card outlined @click="openDialog">
+        <v-card-title>
+            {{../referenceClass}} : \{{ referenceValue ? referenceValue.name : '' }}
+        </v-card-title>
+
+        <v-dialog v-model="pickerDialog">
+            <v-card>
+                <v-card-title>{{../referenceClass}}</v-card-title>
+                <v-card-text>
+                    <{{../referenceClass}}Picker v-model="value" @selected="pick"/>
+                </v-card-text>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="primary" text @click="pickerDialog = false">Close</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
     </v-card>
     {{/referenceClass}}
 
@@ -15,7 +30,7 @@ path: {{boundedContext.nameCamelCase}}/frontend/src/components
     <v-card style="width:450px;" outlined>
         <template slot="progress">
             <v-progress-linear
-                    color="deep-purple"
+                    color="primary-darker-1"
                     height="10"
                     indeterminate
             ></v-progress-linear>
@@ -51,36 +66,36 @@ path: {{boundedContext.nameCamelCase}}/frontend/src/components
         <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn
-                    color="deep-purple lighten-2"
+                    color="primary"
                     text
                     @click="edit"
                     v-if="!editMode"
             >
-                Edit
+                수정
             </v-btn>
             <v-btn
-                    color="deep-purple lighten-2"
+                    color="primary"
                     text
                     @click="save"
                     v-else
             >
-                Save
+                저장
             </v-btn>
             <v-btn
-                    color="deep-purple lighten-2"
+                    color="primary"
                     text
                     @click="remove"
                     v-if="!editMode"
             >
-                Delete
+                삭제
             </v-btn>
             <v-btn
-                    color="deep-purple lighten-2"
+                    color="primary"
                     text
                     @click="editMode = false"
                     v-if="editMode && !isNew"
             >
-                Cancel
+                취소
             </v-btn>
         </v-card-actions>
         <v-card-actions>
@@ -88,7 +103,7 @@ path: {{boundedContext.nameCamelCase}}/frontend/src/components
             {{#targetElement.operations}}
             <v-btn
                     v-if="!editMode"
-                    color="deep-purple lighten-2"
+                    color="primary"
                     text
                     {{#if (checkParam fieldDescriptors)}}
                     @click="open{{name}}"
@@ -111,7 +126,7 @@ path: {{boundedContext.nameCamelCase}}/frontend/src/components
             {{^isOverride}}
             <v-btn
                     v-if="!editMode"
-                    color="deep-purple lighten-2"
+                    color="primary"
                     text
                     {{#if (checkParam fieldDescriptors)}}
                     @click="open{{name}}"
@@ -205,6 +220,8 @@ path: {{boundedContext.nameCamelCase}}/frontend/src/components
         data: () => ({
         {{#referenceClass}}
             newValue: {},
+            pickerDialog: false,
+            referenceValue: null,
         {{/referenceClass}}
         {{^referenceClass}}
         {{#each relations}}{{#if (isGeneralization sourceElement.namePascalCase ../namePascalCase relationType)}}
@@ -232,6 +249,15 @@ path: {{boundedContext.nameCamelCase}}/frontend/src/components
             {{#referenceClass}}
             else {
                 this.newValue = this.value;
+                var path = '/{{#toURL ../referenceClass}}{{/toURL}}';
+                
+                var temp = await axios.get(axios.fixUrl(path + '/' +  Object.values(this.value)[0]))
+                if(temp.data) {
+                    this.referenceValue = temp.data
+                {{#fieldDescriptors}}
+                    {{#isName}}this.referenceValue.nameField = temp.data.{{nameCamelCase}}; {{/isName}}
+                {{/fieldDescriptors}}
+                }
             }
             {{/referenceClass}}
             {{^referenceClass}}
@@ -273,8 +299,24 @@ path: {{boundedContext.nameCamelCase}}/frontend/src/components
                 this.editMode = true;
             },
             {{#referenceClass}}
+            openDialog() {
+                var path = '/{{#toURL ../referenceClass}}{{/toURL}}/';
+
+                if(this.editMode) {
+                    this.pickerDialog = true;
+                } else {
+                    this.pickerDialog = false;
+                    this.$router.push(path + this.value.id);
+                }
+            },
             async pick(val){
                 this.newValue = val;
+                var path = '/{{#toURL ../referenceClass}}{{/toURL}}';
+                var temp = await axios.get(axios.fixUrl(path + '/' + val.id));
+                if(temp.data) {
+                    this.referenceValue = temp.data;
+                }
+                this.referenceValue.nameField = val.nameField;
             },
             {{/referenceClass}}
             {{^referenceClass}}
@@ -309,7 +351,12 @@ path: {{boundedContext.nameCamelCase}}/frontend/src/components
                     location.reload()
 
                 } catch(e) {
-                    this.$EventBus.$emit('show-error', e);
+                    this.snackbar.status = true
+                    if(e.response && e.response.data.message) {
+                        this.snackbar.text = e.response.data.message
+                    } else {
+                        this.snackbar.text = e
+                    }
                 }
                 
             },
@@ -326,7 +373,12 @@ path: {{boundedContext.nameCamelCase}}/frontend/src/components
                     this.$emit('delete', this.value);
 
                 } catch(e) {
-                    this.$EventBus.$emit('show-error', e);
+                    this.snackbar.status = true
+                    if(e.response && e.response.data.message) {
+                        this.snackbar.text = e.response.data.message
+                    } else {
+                        this.snackbar.text = e
+                    }
                 }
             },
             {{#targetElement.operations}}
@@ -341,7 +393,12 @@ path: {{boundedContext.nameCamelCase}}/frontend/src/components
 
                     this.editMode = false;
                 } catch(e) {
-                    this.$EventBus.$emit('show-error', e);
+                    this.snackbar.status = true
+                    if(e.response && e.response.data.message) {
+                        this.snackbar.text = e.response.data.message
+                    } else {
+                        this.snackbar.text = e
+                    }
                 }
             },
             {{#if (checkParam fieldDescriptors)}}
@@ -366,7 +423,12 @@ path: {{boundedContext.nameCamelCase}}/frontend/src/components
 
                     this.editMode = false;
                 } catch(e) {
-                    this.$EventBus.$emit('show-error', e);
+                    this.snackbar.status = true
+                    if(e.response && e.response.data.message) {
+                        this.snackbar.text = e.response.data.message
+                    } else {
+                        this.snackbar.text = e
+                    }
                 }
             },
             {{#if (checkParam fieldDescriptors)}}

@@ -9,19 +9,17 @@ path: {{nameCamelCase}}/frontend/src/components/primitives
                     label="Attachment File"
             ></v-checkbox>
             <v-text-field
-                v-bind="$attrs"
-                v-if="!isFile"
-                :label="label" 
-                :type="type"
-                v-model="value"
-                @change="change"
+                    v-if="!isFile"
+                    :label="label" 
+                    :type="type"
+                    v-model="value"
+                    @change="change"
             ></v-text-field>
             <v-file-input
-                v-else
-                v-bind="$attrs"
-                :label="label"
-                v-model="file"
-                @change="change"
+                    v-else
+                    :label="label"
+                    v-model="file"
+                    @change="change"
             ></v-file-input>
         </div>
         <div v-else>

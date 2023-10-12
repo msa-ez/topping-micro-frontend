@@ -4,72 +4,172 @@ path: {{boundedContext.nameCamelCase}}/frontend/src/components
 ---
 <template>
     {{#referenceClass}}
-    <div>
-        <BasePicker v-if="editMode" searchApiPath="{{#toURL ../referenceClass}}{{/toURL}}{{#../boundedContext.aggregates}}{{#outgoingRelations}}{{#target}}{{#attached 'View' this}}/search/findBy{{namePascalCase}}{{/attached}}{{/target}}{{/outgoingRelations}}{{/../boundedContext.aggregates}}" searchParameterName="{{#../boundedContext.aggregates}}{{#outgoingRelations}}{{#target}}{{#attached 'BoundedContext' this}}{{#aggregates}}{{#if (compareName name ../../../../../../referenceClass)}}{{#getNameField aggregateRoot.fieldDescriptors}}{{/getNameField}}{{/if}}{{/aggregates}}{{/attached}}{{/target}}{{/outgoingRelations}}{{/../boundedContext.aggregates}}"  idField="{{#../boundedContext.aggregates}}{{#outgoingRelations}}{{#target}}{{#attached 'BoundedContext' this}}{{#aggregates}}{{#if (compareName name ../../../../../../referenceClass)}}{{#getKey aggregateRoot.fieldDescriptors}}{{/getKey}}{{/if}}{{/aggregates}}{{/attached}}{{/target}}{{/outgoingRelations}}{{/../boundedContext.aggregates}}" nameField="{{#../boundedContext.aggregates}}{{#outgoingRelations}}{{#target}}{{#attached 'BoundedContext' this}}{{#aggregates}}{{#if (compareName name ../../../../../../referenceClass)}}{{#getNameField aggregateRoot.fieldDescriptors}}{{/getNameField}}{{/if}}{{/aggregates}}{{/attached}}{{/target}}{{/outgoingRelations}}{{/../boundedContext.aggregates}}" path="{{#toURL ../referenceClass}}{{/toURL}}" label="{{#ifNotNull displayName ../namePascalCase}}{{/ifNotNull}}" v-model="value" @selected="pick" :editMode="editMode" />
-        <div v-else style="height:100%">
-            <span>\{{ value && value.name ? value.name : '' }}</span>
-        </div>
-    </div>
+    <v-card outlined @click="openDialog">
+        <v-card-title>
+            {{../referenceClass}} : \{{ referenceValue ? referenceValue.name : '' }}
+        </v-card-title>
+
+        <v-dialog v-model="pickerDialog">
+            <v-card>
+                <v-card-title>{{../referenceClass}}</v-card-title>
+                <v-card-text>
+                    <{{../referenceClass}}Picker v-model="value" @selected="pick"/>
+                </v-card-text>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="primary" text @click="pickerDialog = false">Close</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+    </v-card>
     {{/referenceClass}}
 
     {{^referenceClass}}
-    <div>
-        <div class="detail-title">
-        {{namePascalCase}}
-        </div>
-        <v-col>
+    <v-card outlined>
+        <v-card-title>
+            {{namePascalCase}}
+        </v-card-title>
+
+        <v-card-text>
         {{#fieldDescriptors}}
         {{#if (isNotId nameCamelCase)}}
         {{#if (isPrimitive className)}}
-            <{{getPrimitiveType className}} label="{{#ifNotNull displayName namePascalCase}}{{/ifNotNull}}" v-model="value.{{nameCamelCase}}" :editMode="editMode"/>
+            <{{getPrimitiveType className}} label="{{namePascalCase}}" v-model="value.{{nameCamelCase}}" :editMode="editMode"/>
         {{else}}
+        {{#checkVO className}}
+            <{{className}} offline label="{{namePascalCase}}" v-model="value.{{nameCamelCase}}" :editMode="editMode" @change="change"/>
+        {{/checkVO}}
         {{#checkEntityMember className}}
-            <{{className}} offline label="{{#ifNotNull displayName namePascalCase}}{{/ifNotNull}}" v-model="value.{{nameCamelCase}}" :editMode="editMode" @change="change"/>
+            <{{className}} offline label="{{namePascalCase}}" v-model="value.{{nameCamelCase}}" :editMode="editMode" @change="change"/>
         {{/checkEntityMember}}
         {{#checkListOfEntityMember className}}
-            <{{getEntityClassNameOfList className}}List offline label="{{#ifNotNull displayName namePascalCase}}{{/ifNotNull}}" v-model="value.{{nameCamelCase}}" :editMode="editMode" @change="change"/>
+            <{{getEntityClassNameOfList className}}List offline label="{{namePascalCase}}" v-model="value.{{nameCamelCase}}" :editMode="editMode" @change="change"/>
         {{/checkListOfEntityMember}}
         {{/if}}
         {{/if}}
         {{/fieldDescriptors}}
-        </v-col>
+        </v-card-text>
 
         <v-card-actions v-if="inList">
             <slot name="actions"></slot>
         </v-card-actions>
-    </div>
+    </v-card>
     {{/referenceClass}}
 </template>
 
 <script>
-    import BaseEntity from './base-ui/BaseEntity'
+    {{#referenceClass}}
+    const axios = require('axios').default;
+    {{/referenceClass}}
 
     export default {
         name: '{{namePascalCase}}',
-        mixins:[BaseEntity],
-        components:{
+        components:{},
+        props: {
+            value: [Object, String, Number, Boolean, Array],
+            editMode: Boolean,
+            isNew: Boolean,
+            offline: Boolean,
+            inList: Boolean,
+            label: String,
         },
         data: () => ({
-            path: '{{#if referenceClass}}{{#toURL referenceClass}}{{/toURL}}{{else}}{{namePlural}}{{/if}}',
+            {{#referenceClass}}
+            newValue: {},
+            pickerDialog: false,
+            referenceValue: null,
+            {{/referenceClass}}
         }),
-        props: {
+        async created() {
+            if(!Object.values(this.value)[0]) {
+                this.$emit('input', {});
+                this.newValue = {
+                {{#fieldDescriptors}}
+                    '{{nameCamelCase}}': '',
+                {{/fieldDescriptors}}
+                }
+            }
+            {{#referenceClass}}
+            else {
+                this.newValue = this.value;
+                var path = '/{{#toURL ../referenceClass}}{{/toURL}}';
+                var temp = await axios.get(axios.fixUrl(path + '/' +  Object.values(this.value)[0]));
+                if(temp.data) {
+                    this.referenceValue = temp.data
+                {{#fieldDescriptors}}
+                    {{#isName}}this.referenceValue.nameField = temp.data.{{nameCamelCase}}; {{/isName}}
+                {{/fieldDescriptors}}
+                }
+            }
+            {{/referenceClass}}
+            {{^referenceClass}}
+            if(typeof this.value === 'object') {
+            {{#fieldDescriptors}}
+            {{#if (isNotId nameCamelCase)}}
+            {{#if (isPrimitive className)}}
+                if(!('{{nameCamelCase}}' in this.value)) {
+                    this.value.{{nameCamelCase}} = {{#setDefaultValue className}}{{/setDefaultValue}};
+                }
+            {{/if}}
+            {{/if}}
+            {{/fieldDescriptors}}
+            }
+            {{/referenceClass}}
         },
         watch: {
-            value(val){
-                this.value = val;
-                this.change();
+            value(val) {
+                this.$emit('input', val);
+            },
+            newValue(val) {
+                this.$emit('input', val);
             },
         },
-        async created(){
-            if (this.value && this.value.id !== undefined) {
-                this.value = await this.repository.findById(this.value.id)
-            }
-        },
+
         methods: {
-            pick(val){
-                this.value = val;
-                this.change();
+            edit() {
+                this.editMode = true;
             },
+            async add() {
+                this.editMode = false;
+                this.$emit('input', this.value);
+
+                if(this.isNew){
+                    this.$emit('add', this.value);
+                } else {
+                    this.$emit('edit', this.value);
+                }
+            },
+            async remove(){
+                this.editMode = false;
+                this.isDeleted = true;
+
+                this.$emit('input', this.value);
+                this.$emit('delete', this.value);
+            },
+            change(){
+                this.$emit('change', this.value);
+            },
+            {{#referenceClass}}
+            openDialog() {
+                var path = '/{{#toURL ../referenceClass}}{{/toURL}}/';
+
+                if(this.editMode) {
+                    this.pickerDialog = true;
+                } else {
+                    this.pickerDialog = false;
+                    this.$router.push(path + this.value.id);
+                }
+            },
+            async pick(val){
+                this.newValue = val;
+                var path = '/{{#toURL ../referenceClass}}{{/toURL}}';
+                var temp = await axios.get(axios.fixUrl(path + '/' + val.id));
+                if(temp.data) {
+                    this.referenceValue = temp.data;
+                }
+                this.referenceValue.nameField = val.nameField;
+            },
+            {{/referenceClass}}
         }
     }
 </script>

@@ -2,35 +2,48 @@ fileName: App.vue
 ---
 <template>
     <v-app>
-        <v-app-bar app clipped-left flat color="primary">
+        <v-app-bar 
+                app 
+                clipped-left 
+                flat
+                color="primary"
+        >
             <v-toolbar-title>
-                <v-app-bar-nav-icon 
-                        class="contrast-primary-text"
+                <span class="second-word font uppercase"
+                    style="font-weight:700;"
+                >
+                    <v-app-bar-nav-icon
                         @click="openSideBar()"
-                        style="font-size:56px; font-weight: 300; padding-top:8px; margin-right:5px;"
-                >≡</v-app-bar-nav-icon>
-
-                <span style="font-weight:700;"
-                        class="second-word font uppercase contrast-primary-text"
-                >{{ projectName }}</span>
+                        style="z-index:1;
+                        height:56px;
+                        width:30px;
+                        margin-right:10px;
+                        font-weight:300;
+                        font-size:55px;"
+                    >
+                        <div style="line-height:100%;">≡</div>
+                    </v-app-bar-nav-icon>
+                </span>
             </v-toolbar-title>
 
-            <span class="mdi mdi-home contrast-primary-text"
-                    style="margin-left:10px; font-size:20px; cursor:pointer;"
-                    to="/"
-            ></span>
-
+            <v-btn icon to="/">
+                <v-icon>mdi-home</v-icon>
+            </v-btn>
+            
             <v-spacer></v-spacer>
 
-            <b style="margin-left:10px; font-size:10px;"
-                    class="contrast-primary-text"
-            >\{{username}} 님</b>
-
-            <v-btn class="contrast-primary-text"
-                    style="font-size:10px"
-                    text
-                    @click="logout()"
-            >Logout</v-btn>
+            {{#if (isSelectedSecurity options.rootModel.toppingPlatforms)}}
+            <b style="margin-left:10px">\{{username}} 님</b>
+            <v-btn
+                text
+                color="white"
+                style="font-size:10px"
+                @click="logout()"
+            >
+                Logout
+            </v-btn>
+            {{else}}
+            {{/if}}
         </v-app-bar>
 
         <v-navigation-drawer 
@@ -40,29 +53,31 @@ fileName: App.vue
                 flat 
         >
             <v-list>
-                <v-list-group
-                    v-for="menu in menus"
-                    :key="menu.id"
-                    no-action
+        {{#boundedContexts}}
+            {{#aggregates}}
+                <v-list-item
+                    class="px-2"
+                    key="{{namePlural}}"
+                    to="/{{../namePlural}}/{{namePlural}}"
+                    color="primary"
+                    style="font-weight:700;"
                 >
-                    <template v-slot:activator>
-                        <v-list-item-content>
-                            <v-list-item-title>\{{ menu.title }}</v-list-item-title>
-                        </v-list-item-content>
-                    </template>
+                    {{#ifNotNull displayName namePascalCase}}{{/ifNotNull}}
+                </v-list-item>
+            {{/aggregates}}
 
-                    <v-list-item
-                        v-for="item in menu.items"
-                        :key="item.key"
-                        :to="item.url"
-                        @click="changeUrl()"
-                        style="margin-left: -40px;"
-                    >
-                        <v-list-item-content>
-                            <v-list-item-title>\{{ item.name }}</v-list-item-title>
-                        </v-list-item-content>
-                    </v-list-item>
-                </v-list-group>
+            {{#views}}
+                <v-list-item
+                    class="px-2"
+                    key="{{namePlural}}"
+                    to="{{namePlural}}"
+                    color="primary"
+                    style="font-weight:700;"
+                >
+                    {{namePascalCase}}
+                </v-list-item>
+            {{/views}}
+        {{/boundedContexts}}
             </v-list>
         </v-navigation-drawer>
 
@@ -77,39 +92,32 @@ fileName: App.vue
         name: "App",
         data: () => ({
             sideBar: true,
-            menus: [
-            {{#boundedContexts}}
-                {
-                    id: '{{nameCamelCase}}',
-                    title: '{{#ifNotNull displayName namePascalCase}}{{/ifNotNull}}',
-                    items: [
-                        {{#aggregates}}
-                        {
-                            key: '{{namePlural}}',
-                            url: '/{{namePlural}}',
-                            name: '{{#ifNotNull displayName namePascalCase}}{{/ifNotNull}}'
-                        },
-                        {{/aggregates}}
-                    ]
-                },
-            {{/boundedContexts}}
-            ],
+            {{#if (isSelectedSecurity options.rootModel.toppingPlatforms)}}
+            username: '',
+            {{/if}}
         }),
         created() {
-            const el = document.createElement('div');
-            el.setAttribute('data-app', true);
-            document.body.appendChild(el);
+        {{#if (isSelectedSecurity options.rootModel.toppingPlatforms)}}
+            var me = this
+            me.username = me.$OAuth.idTokenParsed.preferred_username
+
+            if(!me.username){
+                location.reload()
+            }
+        {{/if}}
         },
         methods: {
             openSideBar(){
                 this.sideBar = !this.sideBar
             },
+            {{#if (isSelectedSecurity options.rootModel.toppingPlatforms)}}
             logout(){
                 if(confirm("로그아웃 하시겠습니까?")){
                     localStorage.clear()
                     location.href = 'http://localhost:9090/realms/master/protocol/openid-connect/logout'
                 }
             },
+            {{/if}}
         }
     };
 </script>
@@ -123,6 +131,22 @@ window.$HandleBars.registerHelper('ifNotNull', function (displayName, name) {
         return displayName;
     }else{
         return name;
+    }
+});
+
+window.$HandleBars.registerHelper('isSelectedSecurity', function (toppingPlatforms) {
+    var selectedSecurity = false;
+    try{
+        for(var i=0; i<toppingPlatforms.length; i++){
+            if(toppingPlatforms[i] == "keycloak-security" || toppingPlatforms[i] == "spring-security"){
+                selectedSecurity =  true;
+            }
+        }
+
+        return selectedSecurity;
+
+    } catch(e){
+        console.log(e)
     }
 });
 </function>

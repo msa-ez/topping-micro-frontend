@@ -5,17 +5,21 @@ path: {{nameCamelCase}}/frontend/src
 import Vue from 'vue'
 import Router from 'vue-router'
 
-Vue.use(Router);
-
 {{#aggregates}}
-import {{namePascalCase}}Manager from "./components/ui/{{namePascalCase}}Grid"
+    {{#if uiStyle.layout}}
+import {{boundedContext.namePascalCase}}{{namePascalCase}}Manager from "./components/listers/{{boundedContext.namePascalCase}}{{namePascalCase}}{{#layoutPascalCase uiStyle.layout}}{{/layoutPascalCase}}"
+    {{else}}
+import {{boundedContext.namePascalCase}}{{namePascalCase}}Manager from "./components/listers/{{boundedContext.namePascalCase}}{{namePascalCase}}Cards"
+    {{/if}}
+import {{boundedContext.namePascalCase}}{{namePascalCase}}Detail from "./components/listers/{{boundedContext.namePascalCase}}{{namePascalCase}}Detail"
 {{/aggregates}}
 
 {{#viewes}}
-    {{#ifEquals dataProjection "cqrs"}}
 import {{namePascalCase}}View from "./components/{{namePascalCase}}View"
-    {{/ifEquals}}
+import {{namePascalCase}}ViewDetail from "./components/{{namePascalCase}}ViewDetail"
 {{/viewes}}
+
+Vue.use(Router);
 
 export default new Router({
     // mode: 'history',
@@ -25,17 +29,25 @@ export default new Router({
         { 
             path: '/{{../namePlural}}/{{namePlural}}',
             name: '{{../namePascalCase}}{{namePascalCase}}Manager',
-            component: {{namePascalCase}}Manager,
+            component: {{../namePascalCase}}{{namePascalCase}}Manager,
+        },
+        {
+            path: '/{{../namePlural}}/{{namePlural}}/:id',
+            name: '{{../namePascalCase}}{{namePascalCase}}Detail',
+            component: {{../namePascalCase}}{{namePascalCase}}Detail,
         },
     {{/aggregates}}
     {{#views}}
-        {{#ifEquals dataProjection "cqrs"}}
         {
             path: '/{{namePlural}}',
             name: '{{namePascalCase}}View',
             component: {{namePascalCase}}View,
         },
-        {{/ifEquals}}
+        {
+            path: '/{{namePlural}}/:id',
+            name: '{{namePascalCase}}ViewDetail',
+            component: {{namePascalCase}}ViewDetail,
+        },
     {{/views}}
     ]
 })

@@ -8,16 +8,17 @@ path: {{nameCamelCase}}/frontend/src/components/vo
         </v-card-title>
 
         <v-img
-            style="width:200px; height:200px; border-radius:10px; position:relative; margin-left:5px; top:5px;"
+            :key="photoRender"
+            style="width:400px; height:300px; border-radius:10px; position:relative; margin-left:5px; top:5px;"
             :style="editMode ? 'cursor:pointer;':''"
-            :src="value.imgFile ? value.imgFile:'https://github.com/kibum0405/topping-wijmo/assets/123912988/7dccf9a0-2347-4a51-a367-0f885555b090'"
+            :src="value.imgFile ? value.imgFile:'https://cdn.vuetifyjs.com/images/cards/cooking.png'"
             class="mx-auto"
             @click="selectFile()"
         ></v-img>
 
         <v-card-text v-if="value">
             <div v-if="editMode">
-                <v-text-field label="Image Name" v-model="value.imgName"/>
+                <v-text-field label="{{#ifNotNull displayName namePascalCase}}{{/ifNotNull}}" v-model="value.imgName"/>
                 <slot name="actions"></slot>
             </div>
         </v-card-text>
@@ -25,8 +26,6 @@ path: {{nameCamelCase}}/frontend/src/components/vo
 </template>
 
 <script>
-    import Vue from "vue";
-
     export default {
         name:"Photo",
         props: {
@@ -34,6 +33,9 @@ path: {{nameCamelCase}}/frontend/src/components/vo
             value : Object,
             label : String, 
         },
+        data: () => ({
+            photoRender:0
+        }),
         created(){
             if(!this.value) {
                 this.value = {
@@ -54,9 +56,6 @@ path: {{nameCamelCase}}/frontend/src/components/vo
                 }
 
                 var me = this
-                if(!me.value){
-                    me.value = {}
-                }
                 var input = document.createElement("input");
                 input.type = "file";
                 input.accept = "image/*";
@@ -69,7 +68,8 @@ path: {{nameCamelCase}}/frontend/src/components/vo
 
                     reader.onload = function () {
                         var result = reader.result;
-                        Vue.set(me.value, 'imgFile', result);
+                        me.value.imgFile = result;
+                        me.photoRender++;
                     };
                     reader.readAsDataURL( file );
                 };
@@ -80,3 +80,13 @@ path: {{nameCamelCase}}/frontend/src/components/vo
 
 <style scoped>
 </style>
+
+<function>
+window.$HandleBars.registerHelper('ifNotNull', function (displayName, name) {
+    if(displayName){
+        return displayName;
+    }else{
+        return name;
+    }
+})
+</function>

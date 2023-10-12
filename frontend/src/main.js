@@ -1,28 +1,27 @@
  /*eslint-disable*/
 import Vue from "vue";
-import App from "./App.vue";
-import vuetify from "./plugins/vuetify";
-import Managing from "./components";
-import router from "./router";
-import ExcelExportButton from "./components/base-ui/export-btn.vue";
-import Keycloak from 'keycloak-js';
-Vue.config.productionTip = false;
-Vue.component("excel-export-button", ExcelExportButton);
-Vue.prototype.$Vue = Vue;
-Vue.prototype.$EventBus = new Vue();
-
 import singleSpaVue from "single-spa-vue";
+
+import App from "./App.vue";
 import '@babel/polyfill';
+import vuetify from "./plugins/vuetify";
+import router from "./router";
+
+import Managing from "./components";
+{{#if (isSelectedSecurity options.rootModel.toppingPlatforms)}}
+import Keycloak from 'keycloak-js';
+{{/if}}
+
+Vue.config.productionTip = false;
+require('./GlobalStyle.css');
 
 const axios = require("axios").default;
-require('./style.css');
 
 // backend host url
 axios.backend = null; //"http://localhost:8088";
 
 // axios.backendUrl = new URL(axios.backend);
 axios.fixUrl = function(original){
-
   if(!axios.backend && original.indexOf("/")==0) return original;
 
   var url = null;
@@ -54,7 +53,7 @@ Vue.use(Managing);
 const pluralCaseList = []
 
 {{#aggregates}}
-pluralCaseList.push( {plural: "{{namePlural}}", pascal: "{{namePascalCase}}"} )
+pluralCaseList.push( {plural: "{{boundedContext.namePlural}}/{{namePlural}}", pascal: "{{boundedContext.namePascalCase}}{{namePascalCase}}"} )
 {{/aggregates}}
 
 {{#views}}
@@ -73,13 +72,14 @@ Vue.prototype.$ManagerLists.forEach(function(item, idx) {
   })
 })
 
+
+{{#if (isSelectedSecurity options.rootModel.toppingPlatforms)}}
 let initOptions = {
   url: `http://localhost:9090/`,
   realm: `master`,
-  clientId: `cliend-name`,
+  clientId: `master`,
   onLoad: `login-required`,
 };
-
 
 let keycloak = new Keycloak(initOptions);
 
@@ -114,16 +114,6 @@ function init() {
     
     window.setTimeout(refreshToken.bind(null, keycloak), ONE_MINUTE);
   }).catch(() => {
-
-    const vueLifecycles = singleSpaVue({
-      Vue,
-      appOptions: {
-        vuetify: vuetify,
-        render: h => h(App),
-        router
-      }
-    });
-
     console.error(`Auth Fail`);
   })
 }
@@ -150,7 +140,34 @@ function warnRefresh() {
 function errorRefresh() {
   console.error('Failed to refresh token');
 }
+{{else}}
+const vueLifecycles = singleSpaVue({
+  Vue,
+  appOptions: {
+    vuetify: vuetify,
+    render: h => h(App),
+    router
+  }
+});
+{{/if}}
 
 export const bootstrap = vueLifecycles.bootstrap;
 export const mount = vueLifecycles.mount;
 export const unmount = vueLifecycles.unmount;
+
+<function>
+ window.$HandleBars.registerHelper('isSelectedSecurity', function (selectedSecurity) {
+    try{
+        var isSelectedSecurity = false
+        for(var i=0; i<selectedSecurity.length; i++){
+            if(selectedSecurity[i] == 'keycloak-security'){
+                isSelectedSecurity =  true;
+            }
+        }
+
+        return isSelectedSecurity;
+    } catch(e){
+        console.log(e)
+    }
+});
+</function>
