@@ -25,7 +25,6 @@ fileName: Home.vue
                             outlined
                             rounded
                             :to="card.link"
-                            replace
                             style="font-weight:500; font-size:20px; padding:15px; border:solid 2px; max-width:250px; overflow:hidden"
                         >
                             \{{ card.text }}
@@ -48,7 +47,7 @@ export default {
             {{#aggregates}}
             { 
                 text: "{{#ifNotNull displayName namePascalCase}}{{/ifNotNull}}",
-                link: "/{{../nameCamelCase}}/{{namePlural}}",
+                link: "/{{namePlural}}",
             },
             {{/aggregates}}
         {{/boundedContexts}}

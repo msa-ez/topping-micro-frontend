@@ -2,12 +2,7 @@ fileName: App.vue
 ---
 <template>
     <v-app>
-        <v-app-bar
-                app
-                clipped-left
-                flat
-                color="primary"
-        >
+        <v-app-bar app clipped-left flat color="primary">
             <v-toolbar-title>
                 <v-app-bar-nav-icon 
                         class="contrast-primary-text"
@@ -22,7 +17,7 @@ fileName: App.vue
 
             <span class="mdi mdi-home contrast-primary-text"
                     style="margin-left:10px; font-size:20px; cursor:pointer;"
-                    @click="$router.replace('/)"
+                    to="/"
             ></span>
 
             <v-spacer></v-spacer>
@@ -46,9 +41,9 @@ fileName: App.vue
         >
             <v-list>
                 <v-list-group
-                        v-for="menu in menus"
-                        :key="menu.id"
-                        no-action
+                    v-for="menu in menus"
+                    :key="menu.id"
+                    no-action
                 >
                     <template v-slot:activator>
                         <v-list-item-content>
@@ -57,11 +52,11 @@ fileName: App.vue
                     </template>
 
                     <v-list-item
-                            v-for="item in menu.items"
-                            :key="item.key"
-                            :to="item.url"
-                            replace
-                            style="margin-left: -40px;"
+                        v-for="item in menu.items"
+                        :key="item.key"
+                        :to="item.url"
+                        @click="changeUrl()"
+                        style="margin-left: -40px;"
                     >
                         <v-list-item-content>
                             <v-list-item-title>\{{ item.name }}</v-list-item-title>
@@ -81,7 +76,6 @@ fileName: App.vue
     export default {
         name: "App",
         data: () => ({
-            username: "",
             sideBar: true,
             menus: [
             {{#boundedContexts}}
@@ -92,7 +86,7 @@ fileName: App.vue
                         {{#aggregates}}
                         {
                             key: '{{namePlural}}',
-                            url: '/{{../nameCamelCase}}/{{namePlural}}',
+                            url: '/{{namePlural}}',
                             name: '{{#ifNotNull displayName namePascalCase}}{{/ifNotNull}}'
                         },
                         {{/aggregates}}

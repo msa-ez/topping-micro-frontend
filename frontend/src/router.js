@@ -23,8 +23,8 @@ export default new Router({
     routes: [
     {{#aggregates}}
         { 
-            path: '/{{../nameCamelCase}}/{{namePlural}}',
-            name: '{{namePascalCase}}Manager',
+            path: '/{{../namePlural}}/{{namePlural}}',
+            name: '{{../namePascalCase}}{{namePascalCase}}Manager',
             component: {{namePascalCase}}Manager,
         },
     {{/aggregates}}

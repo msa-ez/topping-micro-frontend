@@ -13,7 +13,7 @@ const routes = constructRoutes(`
     <application name="@my-app/home"></application>
   </route>
 {{#boundedContexts}}
-  <route path="{{nameCamelCase}}">
+  <route path="{{namePlural}}">
     <application name="@my-app/{{name}}"></application>
   </route>
 {{/boundedContexts}}
