@@ -1,6 +1,6 @@
 forEach: Model
 fileName: router.js
-path: for-model/microfrontend-home/src
+path: microfrontend-home/src
 ---
 import Vue from 'vue'
 import Router from 'vue-router'
