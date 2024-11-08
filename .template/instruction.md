@@ -17,6 +17,35 @@
 - **microfrontend-root**
 ##### ![image](https://github.com/user-attachments/assets/dadbfb57-03a1-4e39-aa0c-4cf9a63d959f)
 Root Application. This is the top-level application responsible for configuring SingleSPA and managing the routing across the entire application. It controls the loading of sub-applications and provides functionality for page transitions or module loading as needed.
+- indes.ejs
+```
+<script type="systemjs-importmap">
+  {
+    "imports": {
+      "@my-app/home": "//localhost:9090/js/app.js",
+      "@my-app/sub-1": "//localhost:9001/js/app.js",
+      "@my-app/sub-2": "//localhost:9002/js/app.js",
+      "@my-app/root-config": "/root-config.js"
+    }
+  }
+</script>
+```
+- root-config.js
+```
+const routes = constructRoutes(`
+<single-spa-router mode="hash" base="/">
+  <route default>
+    <application name="@my-app/home"></application>
+  </route>
+  <route path="sub-1">
+    <application name="@my-app/sub-1"></application>
+  </route>
+  <route path="sub-2">
+    <application name="@my-app/sub-2"></application>
+  </route>
+</single-spa-router>
+`);
+```
 
 - **microfrontend-home**
 ##### ![image](https://github.com/user-attachments/assets/85e6fa1c-8ee4-4ebb-915a-7071120881b8)
@@ -42,9 +71,9 @@ npm run build
 npm run serve:standalone
 ```
 
-#### 3. Run the Other Microfrontends Services:
+#### 3. Run the Frontend of Sub Application:
 ```
-cd <bounded-context-name>
+cd <sub-application-name>
 npm i
 npm run serve
 ```
