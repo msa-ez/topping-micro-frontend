@@ -91,3 +91,8 @@ localStorage.setItem("devtools", true);
 ![image](https://github.com/user-attachments/assets/db16be36-0aa6-4d15-8738-6eecb396324f)
 
 The default URL for "@my-app/home" is "//localhost:9090/js/app.js".
+
+#### Example Page
+##### Fish ERP Project
+![image](https://github.com/user-attachments/assets/f949ed0a-d2a3-41df-be0a-570a77ea34e6)
+
